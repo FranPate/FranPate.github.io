@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Francisco Ian Patejim — Full-stack developer</title>
-<meta name="description" content="Full-stack developer from Buenos Aires. Sole developer of BInfo, a production system for workplace-accident claim investigations.">
+<meta name="description" content="Full-stack developer from Buenos Aires. Sole developer of BInfo, a production system for workplace-accident claim investigations. Java, Spring Boot, Vue, Node.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script>
   // Tema e idioma antes de pintar, para que no parpadee.
   (function () {
@@ -21,300 +21,352 @@
 </script>
 <style>
   :root {
-    --bg: #f3f1eb; --bg2: #ebe8df; --fg: #15171b; --muted: #5f5d57; --line: #d6d1c4;
-    --panel: #ffffff; --accent: #0b7a5f; --accent-soft: #d5ece4; --ink: #15171b; --on-ink: #e9efe9;
-    --term: #101418; --term-fg: #c9d4cf; --term-dim: #6f7d78; --term-ok: #6ee7b7;
-    --dot: rgba(21,23,27,.07);
+    --bg: #eeebe3; --bg2: #e4e0d5; --fg: #121212; --muted: #5d5a53; --line: #cfcabd;
+    --card: #f7f5f0; --hot: #ff4f1f; --hot-fg: #121212; --ink: #121212; --on-ink: #eeebe3;
+    --term: #121212; --term-fg: #d8d4ca; --term-dim: #7d786d; --term-hi: #ff7a50;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #0c0f12; --bg2: #11161a; --fg: #e8ece9; --muted: #93a09a; --line: #222a2f;
-      --panel: #12181c; --accent: #5fe3b4; --accent-soft: #123228; --ink: #e8ece9; --on-ink: #0c0f12;
-      --term: #070a0c; --term-fg: #c9d4cf; --term-dim: #5d6b66; --term-ok: #5fe3b4;
-      --dot: rgba(232,236,233,.06);
+      --bg: #101010; --bg2: #171716; --fg: #ece9e1; --muted: #9a958a; --line: #2b2a27;
+      --card: #191918; --hot: #ff6a3d; --hot-fg: #101010; --ink: #ece9e1; --on-ink: #101010;
+      --term: #1c1b19; --term-fg: #d8d4ca; --term-dim: #6c675e; --term-hi: #ff7a50;
     }
   }
   :root[data-theme="dark"] {
-    --bg: #0c0f12; --bg2: #11161a; --fg: #e8ece9; --muted: #93a09a; --line: #222a2f;
-    --panel: #12181c; --accent: #5fe3b4; --accent-soft: #123228; --ink: #e8ece9; --on-ink: #0c0f12;
-    --term: #070a0c; --term-fg: #c9d4cf; --term-dim: #5d6b66; --term-ok: #5fe3b4;
-    --dot: rgba(232,236,233,.06);
+    --bg: #101010; --bg2: #171716; --fg: #ece9e1; --muted: #9a958a; --line: #2b2a27;
+    --card: #191918; --hot: #ff6a3d; --hot-fg: #101010; --ink: #ece9e1; --on-ink: #101010;
+    --term: #1c1b19; --term-fg: #d8d4ca; --term-dim: #6c675e; --term-hi: #ff7a50;
   }
 
   * { box-sizing: border-box; }
   html { scroll-behavior: smooth; }
+  html, body { overflow-x: clip; }
   body { margin: 0; background: var(--bg); color: var(--fg);
-    font: 17px/1.6 "IBM Plex Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased;
-    transition: background .25s, color .25s; }
-  a { color: var(--accent); text-underline-offset: 3px; }
-  .wrap { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    font: 17px/1.6 "Geist", system-ui, sans-serif; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
+  a { color: inherit; text-underline-offset: 3px; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
   @media (max-width: 600px) { .wrap { padding: 0 16px; } }
-  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
-  .display { font-family: "Bricolage Grotesque", "IBM Plex Sans", sans-serif; }
+  .mono { font-family: "Geist Mono", ui-monospace, monospace; }
+  svg.ic { width: 1em; height: 1em; fill: currentColor; flex: none; }
 
-  /* Idioma: cada texto existe en los dos, se oculta el que no va */
   html[lang="es"] [data-l="en"], html:not([lang="es"]) [data-l="es"] { display: none !important; }
 
-  /* Barra superior */
-  .top { position: sticky; top: 0; z-index: 10; backdrop-filter: blur(10px);
-    background: color-mix(in srgb, var(--bg) 82%, transparent); border-bottom: 1px solid var(--line); }
-  .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 56px; gap: 16px; }
-  .mark { font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 14px; color: var(--fg); text-decoration: none; }
-  .mark b { color: var(--accent); font-weight: 500; }
-  .top nav { display: flex; align-items: center; gap: 22px; font-size: 14px; }
-  .top nav a.sec { color: var(--muted); text-decoration: none; }
-  .top nav a.sec:hover { color: var(--fg); }
-  @media (max-width: 760px) { .top nav a.sec { display: none; } }
-  .toggles { display: flex; gap: 6px; }
-  .tg { font: 500 12px "IBM Plex Mono", monospace; color: var(--fg); background: transparent;
-    border: 1px solid var(--line); border-radius: 999px; height: 30px; min-width: 44px; padding: 0 10px; cursor: pointer; }
-  .tg:hover { border-color: var(--accent); }
+  /* Barra */
+  .top { position: fixed; inset: 0 0 auto 0; z-index: 20; mix-blend-mode: normal; }
+  .top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .mark { font: 500 14px "Geist Mono", monospace; text-decoration: none; background: var(--bg); padding: 4px 10px; border: 1px solid var(--line); border-radius: 999px; }
+  .mark b { color: var(--hot); font-weight: 500; }
+  .top nav { display: flex; gap: 6px; align-items: center; background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
+  .top nav a { font-size: 14px; text-decoration: none; color: var(--muted); padding: 4px 10px; border-radius: 999px; }
+  .top nav a:hover { color: var(--fg); background: var(--bg2); }
+  @media (max-width: 760px) { .top nav a { display: none; } }
+  .tg { font: 500 12px "Geist Mono", monospace; color: var(--fg); background: var(--bg2); border: 0; border-radius: 999px; height: 30px; min-width: 40px; padding: 0 10px; cursor: pointer; }
+  .tg:hover { background: var(--hot); color: var(--hot-fg); }
   .tg svg { width: 14px; height: 14px; vertical-align: -2px; }
 
-  /* Hero */
-  .hero { position: relative; padding: 88px 0 72px; overflow: hidden; }
-  .hero::before { content: ""; position: absolute; inset: 0;
-    background-image: radial-gradient(var(--dot) 1px, transparent 1px); background-size: 22px 22px;
-    mask-image: linear-gradient(to bottom, #000 40%, transparent); -webkit-mask-image: linear-gradient(to bottom, #000 40%, transparent); }
-  .hero .wrap { position: relative; display: grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items: center; }
-  @media (max-width: 900px) { .hero .wrap { grid-template-columns: 1fr; gap: 40px; } .hero { padding: 56px 0 48px; } }
-  .status { display: inline-flex; align-items: center; gap: 8px; font: 13px "IBM Plex Mono", monospace; color: var(--muted);
-    border: 1px solid var(--line); border-radius: 999px; padding: 4px 12px 4px 10px; background: var(--panel); }
-  .status i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
-  .hero h1 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 800; letter-spacing: -.035em;
-    font-size: clamp(44px, 7.4vw, 92px); line-height: .95; margin: 22px 0 22px; }
-  .hero h1 span { display: block; color: var(--accent); }
-  .hero .lead { font-size: clamp(18px, 2vw, 21px); line-height: 1.5; max-width: 560px; margin: 0 0 30px; color: var(--muted); }
-  .hero .lead strong { color: var(--fg); font-weight: 500; }
-  .ctas { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-  .btn { display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: 8px;
-    font-size: 15px; font-weight: 500; text-decoration: none; border: 1px solid var(--line); color: var(--fg); background: var(--panel); }
-  .btn:hover { border-color: var(--fg); }
-  .btn.primary { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
-  .btn.primary:hover { opacity: .9; }
-  .small-links { display: flex; gap: 18px; margin-top: 22px; font-size: 14px; }
-  .small-links a { color: var(--muted); }
+  /* Hero: nombre gigante cortado en diagonal */
+  .hero { min-height: 100svh; display: grid; align-items: end; padding: 120px 0 56px; position: relative; }
+  .hero .wrap { width: 100%; }
+  .hero h1 { font-family: "Syne", sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: -.045em;
+    font-size: clamp(32px, 8.4vw, 118px); line-height: .9; margin: 0; }
+  .hero h1 .r2 { display: block; padding-left: 8vw; color: transparent; -webkit-text-stroke: 2px var(--fg); }
+  .hero h1 .r2 i { font-style: normal; color: var(--hot); -webkit-text-stroke: 0; }
+  @media (max-width: 600px) { .hero h1 .r2 { -webkit-text-stroke-width: 1.2px; padding-left: 0; } }
+  .hero-grid { display: grid; grid-template-columns: 1fr 470px; gap: 48px; align-items: end; margin-top: 48px; }
+  @media (max-width: 960px) { .hero-grid { grid-template-columns: 1fr; gap: 32px; } }
+  .lead { font-size: clamp(19px, 2vw, 23px); line-height: 1.45; margin: 0 0 26px; max-width: 600px; }
+  .lead em { font-style: normal; background: linear-gradient(transparent 62%, color-mix(in srgb, var(--hot) 45%, transparent) 62%); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 10px; }
+  .btn { display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: 999px; font-weight: 500; font-size: 15px;
+    text-decoration: none; border: 1.5px solid var(--fg); transition: transform .15s, background .15s, color .15s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn.hot { background: var(--hot); border-color: var(--hot); color: var(--hot-fg); }
+  .btn.ghost:hover { background: var(--fg); color: var(--bg); }
+  .avail { display: inline-flex; align-items: center; gap: 8px; font: 13px "Geist Mono", monospace; color: var(--muted); margin-bottom: 18px; }
+  .avail i { width: 8px; height: 8px; border-radius: 50%; background: var(--hot); animation: pulse 2s infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
 
-  /* Terminal del hero: datos reales del repo */
-  .term { background: var(--term); color: var(--term-fg); border-radius: 12px; border: 1px solid #ffffff14;
-    box-shadow: 0 30px 60px -30px rgba(0,0,0,.45); font: 13.5px/1.75 "IBM Plex Mono", monospace; overflow: hidden; }
-  .term .bar { display: flex; align-items: center; gap: 7px; padding: 12px 14px; border-bottom: 1px solid #ffffff10; }
-  .term .bar i { width: 11px; height: 11px; border-radius: 50%; background: #2a3237; }
-  .term .bar span { margin-left: 10px; color: var(--term-dim); font-size: 12px; }
-  .term pre { margin: 0; padding: 18px 20px 22px; white-space: pre-wrap; font: inherit; }
-  .term .p { color: var(--term-ok); } .term .d { color: var(--term-dim); } .term .ok { color: var(--term-ok); }
-  .term .ln { opacity: 0; animation: ln .35s forwards; }
+  .term { background: var(--term); color: var(--term-fg); border-radius: 14px; font: 13.5px/1.8 "Geist Mono", monospace; overflow: hidden;
+    transform: rotate(1.2deg); box-shadow: 10px 10px 0 var(--hot); }
+  .term .bar { display: flex; gap: 6px; padding: 12px 14px; border-bottom: 1px solid #ffffff14; align-items: center; }
+  .term .bar i { width: 10px; height: 10px; border-radius: 50%; background: #333; }
+  .term .bar span { margin-left: 8px; color: var(--term-dim); font-size: 12px; }
+  .term pre { margin: 0; padding: 16px 20px 20px; font: inherit; white-space: pre-wrap; }
+  .term .p { color: var(--term-hi); } .term .d { color: var(--term-dim); } .term .k { color: #fff; }
+  .term .ln { display: block; opacity: 0; animation: ln .3s forwards; }
   @keyframes ln { to { opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { .term .ln { opacity: 1; animation: none; } html { scroll-behavior: auto; } }
+  .caret { display: inline-block; width: 8px; height: 1em; background: var(--term-hi); vertical-align: -2px; animation: pulse 1s steps(1) infinite; }
+
+  /* Cinta diagonal de stack */
+  .band { position: relative; z-index: 2; margin: 0 -40px; transform: rotate(-3deg); background: var(--hot); color: var(--hot-fg);
+    border-block: 2px solid var(--fg); overflow: hidden; }
+  .band .track { display: flex; gap: 42px; width: max-content; padding: 16px 0; animation: marquee 38s linear infinite; }
+  .band span { display: inline-flex; align-items: center; gap: 10px; font: 600 18px "Syne", sans-serif; text-transform: uppercase; white-space: nowrap; }
+  .band svg.ic { width: 22px; height: 22px; }
+  @keyframes marquee { to { transform: translateX(-50%); } }
 
   /* Secciones */
-  section { padding: 96px 0; }
-  @media (max-width: 600px) { section { padding: 64px 0; } }
-  .kicker { font: 500 13px "IBM Plex Mono", monospace; color: var(--accent); letter-spacing: .04em; margin: 0 0 14px; }
-  h2 { font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; letter-spacing: -.025em;
-    font-size: clamp(32px, 4.6vw, 54px); line-height: 1.02; margin: 0 0 22px; max-width: 900px; }
+  section { padding: 120px 0; position: relative; }
+  @media (max-width: 600px) { section { padding: 80px 0; } }
+  .kicker { font: 500 13px "Geist Mono", monospace; color: var(--muted); margin: 0 0 18px; display: flex; gap: 10px; align-items: center; }
+  .kicker b { color: var(--hot); font-weight: 500; }
+  h2 { font-family: "Syne", sans-serif; font-weight: 800; letter-spacing: -.035em; line-height: .95; font-size: clamp(38px, 6.4vw, 84px); margin: 0 0 26px; text-transform: uppercase; }
+  h2 .o { color: transparent; -webkit-text-stroke: 1.6px var(--fg); }
   .intro { font-size: 19px; max-width: 720px; color: var(--muted); margin: 0; }
+  .intro strong { color: var(--fg); font-weight: 500; }
 
-  /* Números: tira grande y respirada */
-  .numbers { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 56px; border-top: 1px solid var(--line); }
-  @media (max-width: 760px) { .numbers { grid-template-columns: repeat(2, 1fr); } }
-  .numbers div { padding: 22px 20px 0 0; }
-  .numbers b { display: block; font-family: "Bricolage Grotesque", sans-serif; font-weight: 700;
-    font-size: clamp(40px, 5vw, 60px); letter-spacing: -.03em; line-height: 1; }
-  .numbers span { display: block; margin-top: 8px; color: var(--muted); font-size: 14px; max-width: 180px; }
+  /* BInfo */
+  .private { display: flex; gap: 14px; align-items: flex-start; margin: 28px 0 0; padding: 14px 18px; border: 1.5px dashed var(--line); border-radius: 12px; max-width: 720px; font-size: 15px; color: var(--muted); }
+  .private svg { width: 20px; height: 20px; flex: none; margin-top: 2px; stroke: var(--hot); }
+  .facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 56px; border-top: 2px solid var(--fg); }
+  @media (max-width: 860px) { .facts { grid-template-columns: 1fr; } }
+  .facts div { padding: 22px 24px 0 0; }
+  .facts h3 { font: 700 21px "Syne", sans-serif; margin: 0 0 6px; text-transform: uppercase; letter-spacing: -.01em; }
+  .facts p { margin: 0; color: var(--muted); font-size: 15.5px; }
 
-  /* Galería con marco de navegador */
-  .gallery { margin-top: 64px; }
-  .tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-  .tabs button { font: 500 13px "IBM Plex Mono", monospace; color: var(--muted); background: transparent;
-    border: 1px solid var(--line); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
-  .tabs button[aria-selected="true"] { color: var(--on-ink); background: var(--ink); border-color: var(--ink); }
-  .browser { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--panel);
-    box-shadow: 0 40px 80px -50px rgba(0,0,0,.35); }
-  .browser .bar { display: flex; align-items: center; gap: 7px; padding: 10px 14px; border-bottom: 1px solid var(--line); background: var(--bg2); }
-  .browser .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--line); }
-  .browser .url { margin-left: 12px; flex: 1; max-width: 420px; font: 12px "IBM Plex Mono", monospace; color: var(--muted);
-    background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 3px 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .browser .view { background: #fff; display: grid; place-items: center; min-height: 160px; }
-  .browser img { width: 100%; height: auto; display: block; }
-  .browser img[hidden] { display: none; }
-  .cap { color: var(--muted); font-size: 14px; margin: 12px 0 0; max-width: 760px; }
+  .gallery { margin-top: 72px; display: grid; grid-template-columns: 240px 1fr; gap: 28px; align-items: start; }
+  @media (max-width: 860px) { .gallery { grid-template-columns: 1fr; gap: 16px; } }
+  .tabs { display: flex; flex-direction: column; gap: 4px; position: sticky; top: 90px; }
+  @media (max-width: 860px) { .tabs { flex-direction: row; flex-wrap: wrap; position: static; } }
+  .tabs button { text-align: left; font: 500 15px "Geist", sans-serif; color: var(--muted); background: transparent; border: 0; border-left: 2px solid var(--line);
+    padding: 10px 14px; cursor: pointer; transition: color .15s, border-color .15s; }
+  .tabs button small { display: block; font: 12px "Geist Mono", monospace; color: var(--muted); }
+  .tabs button[aria-selected="true"] { color: var(--fg); border-color: var(--hot); }
+  @media (max-width: 860px) { .tabs button { border: 1.5px solid var(--line); border-radius: 999px; padding: 6px 14px; } .tabs button small { display: none; } .tabs button[aria-selected="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); } }
+  .screen { border: 2px solid var(--fg); border-radius: 14px; overflow: hidden; background: var(--fg); box-shadow: -12px 12px 0 var(--bg2); }
+  .screen .bar { display: flex; gap: 6px; align-items: center; padding: 10px 14px; background: var(--fg); }
+  .screen .bar i { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); }
+  .screen .bar span { margin-left: 10px; font: 12px "Geist Mono", monospace; color: var(--bg2); opacity: .8; }
+  .screen img { display: block; width: 100%; height: auto; }
+  .screen img[hidden] { display: none; }
+  .screen img.in { animation: swap .45s cubic-bezier(.2,.8,.2,1); }
+  @keyframes swap { from { clip-path: polygon(0 0, 0 0, 0 100%, 0 100%); } to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); } }
+  .cap { color: var(--muted); font-size: 14px; margin: 14px 0 0; }
 
-  /* Arquitectura interactiva */
-  .arch-sec { background: var(--bg2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-  .arch { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; margin-top: 48px; align-items: start; }
-  @media (max-width: 900px) { .arch { grid-template-columns: 1fr; gap: 20px; } }
-  .arch svg { width: 100%; height: auto; display: block; }
-  @media (max-width: 600px) { .svgbox { overflow-x: auto; margin: 0 -16px; padding: 0 16px; } .arch svg { min-width: 600px; } .detail { position: static; } }
+  /* Secciones oscuras con borde diagonal que se endereza al scrollear */
+  .dark { background: var(--term); color: var(--term-fg); clip-path: polygon(0 0, 100% 6vw, 100% 100%, 0 100%); padding-top: calc(120px + 6vw); margin-top: -1px; }
+  .dark h2 { color: #f3efe7; } .dark h2 .o { -webkit-text-stroke-color: #f3efe7; }
+  .dark .intro { color: #a29d92; } .dark .kicker { color: #8b867b; }
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .dark { animation: enderezar linear both; animation-timeline: view(); animation-range: entry 0% entry 90%; }
+      @keyframes enderezar { from { clip-path: polygon(0 0, 100% 14vw, 100% 100%, 0 100%); } to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); } }
+      .tilt { animation: tilt linear both; animation-timeline: view(); animation-range: entry 0% cover 40%; }
+      @keyframes tilt { from { transform: translateY(60px) rotate(-2deg); opacity: 0; } to { transform: none; opacity: 1; } }
+    }
+  }
+
+  /* Arquitectura */
+  .arch { display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; margin-top: 56px; align-items: start; }
+  @media (max-width: 960px) { .arch { grid-template-columns: 1fr; gap: 20px; } }
+  .svgbox svg { width: 100%; height: auto; display: block; }
+  @media (max-width: 600px) { .svgbox { overflow-x: auto; margin: 0 -16px; padding: 0 16px; } .svgbox svg { min-width: 600px; } }
   .node { cursor: pointer; outline: none; }
-  .node rect { fill: var(--panel); stroke: var(--line); stroke-width: 1.2; transition: stroke .15s, fill .15s; }
-  .node text { font: 500 13px "IBM Plex Sans", sans-serif; fill: var(--fg); pointer-events: none; }
-  .node text.sub { font: 11px "IBM Plex Mono", monospace; fill: var(--muted); }
-  .node:hover rect, .node:focus rect, .node.on rect { stroke: var(--accent); stroke-width: 2; }
-  .node.on rect { fill: var(--accent-soft); }
-  .edge { fill: none; stroke: var(--line); stroke-width: 1.6; }
-  .edge.flow { stroke: var(--accent); stroke-dasharray: 4 7; animation: flow 1.4s linear infinite; opacity: .0; transition: opacity .2s; }
+  .node rect { fill: #161616; stroke: #3a3936; stroke-width: 1.2; transition: stroke .15s, fill .15s; }
+  .node text { font: 500 13px "Geist", sans-serif; fill: #ece9e1; pointer-events: none; }
+  .node text.sub { font: 11px "Geist Mono", monospace; fill: #8b867b; }
+  .node:hover rect, .node:focus rect { stroke: var(--term-hi); }
+  .node.on rect { fill: var(--term-hi); stroke: var(--term-hi); }
+  .node.on text, .node.on text.sub { fill: #101010; }
+  .edge { fill: none; stroke: #3a3936; stroke-width: 1.6; }
+  .edge.flow { stroke: var(--term-hi); stroke-width: 2; stroke-dasharray: 4 7; animation: flow 1.2s linear infinite; opacity: 0; transition: opacity .2s; }
   .edge.flow.on { opacity: 1; }
   @keyframes flow { to { stroke-dashoffset: -22; } }
-  @media (prefers-reduced-motion: reduce) { .edge.flow { animation: none; stroke-dasharray: none; } }
-  .boundary { fill: none; stroke: var(--muted); stroke-dasharray: 3 5; opacity: .5; }
-  .blabel { font: 11px "IBM Plex Mono", monospace; fill: var(--muted); }
-  .detail { position: sticky; top: 80px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 26px; min-height: 260px; }
-  .detail .tag { font: 12px "IBM Plex Mono", monospace; color: var(--accent); }
-  .detail h3 { font-family: "Bricolage Grotesque", sans-serif; font-size: 26px; letter-spacing: -.02em; margin: 6px 0 10px; line-height: 1.1; }
-  .detail p { margin: 0 0 14px; color: var(--muted); font-size: 16px; }
+  .boundary { fill: none; stroke: #5a5750; stroke-dasharray: 3 5; }
+  .blabel { font: 11px "Geist Mono", monospace; fill: #8b867b; }
+  .detail { position: sticky; top: 90px; border: 1px solid #ffffff1c; border-radius: 14px; padding: 26px; min-height: 280px; background: #ffffff06; }
+  @media (max-width: 600px) { .detail { position: static; } }
+  .detail .tag { font: 12px "Geist Mono", monospace; color: var(--term-hi); }
+  .detail h3 { font: 800 28px "Syne", sans-serif; text-transform: uppercase; letter-spacing: -.02em; margin: 6px 0 12px; line-height: 1.05; color: #f3efe7; }
+  .detail p { margin: 0 0 16px; color: #a29d92; font-size: 16px; }
   .detail ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
-  .detail li { font: 12px "IBM Plex Mono", monospace; background: var(--bg2); border: 1px solid var(--line); padding: 2px 8px; border-radius: 4px; }
-  .hint { font: 12px "IBM Plex Mono", monospace; color: var(--muted); margin-top: 12px; }
+  .detail li { font: 12px "Geist Mono", monospace; border: 1px solid #ffffff26; padding: 2px 9px; border-radius: 999px; color: #d8d4ca; }
+  .hint { font: 12px "Geist Mono", monospace; color: #8b867b; margin-top: 16px; }
 
-  /* Decisiones: índice numerado grande, columna de lectura */
-  .decisions { margin-top: 48px; border-top: 1px solid var(--line); }
-  .dec { display: grid; grid-template-columns: 90px 300px 1fr; gap: 24px; padding: 30px 0; border-bottom: 1px solid var(--line); }
-  .dec .n { font: 500 14px "IBM Plex Mono", monospace; color: var(--accent); padding-top: 4px; }
-  .dec h3 { font-family: "Bricolage Grotesque", sans-serif; font-size: 23px; font-weight: 700; letter-spacing: -.015em; margin: 0; line-height: 1.2; }
-  .dec p { margin: 0; color: var(--muted); max-width: 620px; }
-  @media (max-width: 900px) { .dec { grid-template-columns: 1fr; gap: 8px; } }
+  /* Problemas resueltos */
+  .probs { margin-top: 56px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; counter-reset: p; }
+  @media (max-width: 960px) { .probs { grid-template-columns: 1fr; } }
+  .prob { border: 2px solid var(--fg); border-radius: 16px; padding: 26px 24px 28px; background: var(--card); position: relative; }
+  .prob:nth-child(2) { transform: translateY(36px); }
+  .prob:nth-child(3) { transform: translateY(72px); }
+  @media (max-width: 960px) { .prob:nth-child(n) { transform: none; } }
+  .prob .tagp { font: 12px "Geist Mono", monospace; color: var(--muted); }
+  .prob h3 { font: 800 24px "Syne", sans-serif; text-transform: uppercase; letter-spacing: -.02em; line-height: 1.05; margin: 10px 0 14px; }
+  .prob .q { font-size: 15.5px; margin: 0 0 12px; }
+  .prob .a { font-size: 15.5px; color: var(--muted); margin: 0; padding-top: 12px; border-top: 1px dashed var(--line); }
+  .prob .q b, .prob .a b { font: 500 12px "Geist Mono", monospace; color: var(--hot); display: block; margin-bottom: 2px; }
 
-  /* Cómo trabajo: bloque oscuro, denso */
-  .how { background: var(--term); color: var(--term-fg); }
-  .how h2 { color: #f2f5f3; }
-  .how .intro { color: #93a09a; }
-  .how .kicker { color: var(--term-ok); }
-  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1px; margin-top: 48px; background: #ffffff14; border: 1px solid #ffffff14; border-radius: 12px; overflow: hidden; }
-  @media (max-width: 900px) { .steps { grid-template-columns: 1fr; } }
-  .steps div { background: var(--term); padding: 24px 20px; }
-  .steps .mono { color: var(--term-ok); font-size: 12px; }
-  .steps h3 { font-size: 17px; margin: 8px 0 6px; color: #f2f5f3; font-weight: 600; }
-  .steps p { margin: 0; font-size: 14.5px; color: #93a09a; line-height: 1.55; }
-  .stack { display: flex; flex-wrap: wrap; gap: 6px; margin: 40px 0 0; padding: 0; list-style: none; }
-  .stack li { font: 12.5px "IBM Plex Mono", monospace; color: var(--term-fg); border: 1px solid #ffffff1f; padding: 4px 10px; border-radius: 999px; }
+  /* Proceso */
+  .steps { margin-top: 56px; display: grid; grid-template-columns: 1fr 1fr 1fr 1.6fr 1fr; border: 1px solid #ffffff1c; border-radius: 16px; overflow: hidden; }
+  @media (max-width: 960px) { .steps { grid-template-columns: 1fr; } }
+  .steps > div { padding: 26px 22px; border-right: 1px solid #ffffff1c; position: relative; }
+  .steps > div:last-child { border-right: 0; }
+  @media (max-width: 960px) { .steps > div { border-right: 0; border-bottom: 1px solid #ffffff1c; } }
+  .steps .n { font: 12px "Geist Mono", monospace; color: #8b867b; }
+  .steps h3 { font: 700 19px "Syne", sans-serif; text-transform: uppercase; margin: 10px 0 0; color: #f3efe7; }
+  .steps .star { background: var(--term-hi); color: #101010; }
+  .steps .star .n { color: #101010; opacity: .7; }
+  .steps .star h3 { color: #101010; font-size: 24px; }
+  .steps .star p { margin: 10px 0 0; font-size: 15px; line-height: 1.5; }
+  .steps .star ul { margin: 12px 0 0; padding: 0; list-style: none; font: 12.5px "Geist Mono", monospace; display: grid; gap: 4px; }
+  .steps .star li::before { content: "✕ "; }
+  .steps .star li.ok::before { content: "✓ "; }
 
-  /* Otros trabajos: lista compacta */
-  .other { display: grid; grid-template-columns: 300px 1fr; gap: 40px; }
-  @media (max-width: 900px) { .other { grid-template-columns: 1fr; gap: 12px; } }
-  .other h2 { font-size: clamp(28px, 3.4vw, 38px); }
-  .other ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-  .other li a { display: grid; grid-template-columns: 1fr auto; gap: 4px 20px; padding: 20px 0; border-bottom: 1px solid var(--line); text-decoration: none; color: var(--fg); }
-  .other li a:hover strong { color: var(--accent); }
-  .other strong { font-size: 19px; font-weight: 600; transition: color .15s; }
-  .other .arrow { font-family: "IBM Plex Mono", monospace; color: var(--muted); grid-row: span 2; align-self: center; }
-  .other span.d { color: var(--muted); font-size: 15px; }
+  .stack { display: flex; flex-wrap: wrap; gap: 8px; margin: 56px 0 0; padding: 0; list-style: none; }
+  .stack li { display: inline-flex; align-items: center; gap: 8px; font: 13px "Geist Mono", monospace; color: #d8d4ca; border: 1px solid #ffffff26; padding: 6px 12px; border-radius: 999px; transition: background .15s, color .15s; }
+  .stack li:hover { background: var(--term-hi); color: #101010; border-color: var(--term-hi); }
+  .stack li svg.ic { width: 15px; height: 15px; }
+  .stack li.gcp { border-color: var(--term-hi); color: #fff; }
 
-  /* Contacto */
-  .contact { padding: 110px 0 60px; border-top: 1px solid var(--line); }
-  .contact h2 { font-size: clamp(40px, 7vw, 88px); line-height: .95; letter-spacing: -.035em; font-weight: 800; }
-  .contact a.mail { font-family: "Bricolage Grotesque", sans-serif; font-weight: 700; font-size: clamp(22px, 3.6vw, 40px); letter-spacing: -.02em; overflow-wrap: anywhere; }
-  .contact .foot { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; margin-top: 80px; padding-top: 22px;
-    border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
-  .contact .foot div { display: flex; gap: 18px; flex-wrap: wrap; }
-  .contact .foot a { color: var(--muted); }
+  /* Tienda de proyectos */
+  .shop { margin-top: 64px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  @media (max-width: 960px) { .shop { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .shop { grid-template-columns: 1fr; } }
+  .item { position: relative; border: 2px solid var(--fg); border-radius: 18px; background: var(--card); overflow: hidden; outline: none;
+    display: flex; flex-direction: column; transition: transform .25s, box-shadow .25s; }
+  .item:hover, .item:focus-within, .item.open { transform: translateY(-6px); box-shadow: 8px 8px 0 var(--fg); }
+  .item.big { grid-column: span 2; }
+  @media (max-width: 640px) { .item.big { grid-column: auto; } }
+  .item .sku { position: absolute; top: 12px; left: 12px; z-index: 3; font: 11px "Geist Mono", monospace; background: var(--fg); color: var(--bg); padding: 2px 8px; border-radius: 999px; }
+  .item .live { left: auto; right: 12px; background: var(--hot); color: var(--hot-fg); }
+  .stage { position: relative; height: 230px; background: var(--bg2); overflow: hidden; perspective: 900px; border-bottom: 2px solid var(--fg); }
+  .item.big .stage { height: 300px; }
+  .stage img, .stage .code, .stage .ph { position: absolute; left: 50%; top: 34px; width: 84%; transform: translateX(-50%) rotateX(24deg) rotateZ(-3deg) scale(.9);
+    transform-origin: 50% 0; border: 1.5px solid var(--fg); border-radius: 8px; transition: transform .55s cubic-bezier(.2,.8,.2,1), top .55s cubic-bezier(.2,.8,.2,1);
+    box-shadow: 0 20px 30px -18px rgba(0,0,0,.5); }
+  .item:hover .stage img, .item:focus-within .stage img, .item.open .stage img,
+  .item:hover .stage .code, .item:focus-within .stage .code, .item.open .stage .code,
+  .item:hover .stage .ph, .item.open .stage .ph { transform: translateX(-50%) rotateX(0) rotateZ(0) scale(1); top: 16px; }
+  .stage .code { background: var(--term); color: var(--term-fg); font: 12.5px/1.65 "Geist Mono", monospace; padding: 14px 16px; margin: 0; white-space: pre; overflow: hidden; }
+  .stage .code .k { color: var(--term-hi); } .stage .code .c { color: var(--term-dim); }
+  .stage .ph { height: 170px; display: grid; place-items: center; background: var(--term); color: var(--term-hi); }
+  .stage .ph svg.ic { width: 64px; height: 64px; }
+  .stage .ph span { font: 700 34px "Syne", sans-serif; text-transform: uppercase; }
+  .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .body h3 { font: 800 22px "Syne", sans-serif; text-transform: uppercase; letter-spacing: -.02em; margin: 0; line-height: 1.05; }
+  .body .what { margin: 0; color: var(--muted); font-size: 15px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chips span { display: inline-flex; align-items: center; gap: 6px; font: 12px "Geist Mono", monospace; border: 1px solid var(--line); padding: 2px 9px; border-radius: 999px; }
+  .chips svg.ic { width: 13px; height: 13px; }
+  .more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+  .more > div { overflow: hidden; }
+  .item:hover .more, .item:focus-within .more, .item.open .more { grid-template-rows: 1fr; }
+  .more p { margin: 4px 0 8px; font-size: 14.5px; }
+  .more a { font: 500 13px "Geist Mono", monospace; color: var(--hot); }
+  @media (hover: none) { .more { grid-template-rows: 1fr; } }
 
-  .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease, transform .6s ease; }
-  .reveal.in { opacity: 1; transform: none; }
-  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; transition: none; } }
+  /* Footer */
+  footer { border-top: 2px solid var(--fg); padding: 56px 0 40px; }
+  .foot { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; }
+  @media (max-width: 860px) { .foot { grid-template-columns: 1fr; gap: 28px; } }
+  .foot .name { font: 800 32px "Syne", sans-serif; text-transform: uppercase; letter-spacing: -.03em; line-height: 1; margin: 0 0 12px; }
+  .foot p { margin: 0; color: var(--muted); font-size: 15px; }
+  .foot p.name { color: var(--fg); }
+  .foot h4 { font: 500 12px "Geist Mono", monospace; color: var(--muted); margin: 0 0 12px; font-weight: 500; }
+  .foot ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+  .foot li a { text-decoration: none; display: inline-flex; gap: 8px; align-items: center; }
+  .foot li a:hover { color: var(--hot); }
+  .foot .mail { font-size: 18px; font-weight: 500; }
+  .copy { margin-top: 48px; font: 12px "Geist Mono", monospace; color: var(--muted); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .term .ln { opacity: 1; } html { scroll-behavior: auto; }
+  }
 </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none"><symbol id="i-android" viewBox="0 0 24 24"><path d="M18.4395 5.5586c-.675 1.1664-1.352 2.3318-2.0274 3.498-.0366-.0155-.0742-.0286-.1113-.043-1.8249-.6957-3.484-.8-4.42-.787-1.8551.0185-3.3544.4643-4.2597.8203-.084-.1494-1.7526-3.021-2.0215-3.4864a1.1451 1.1451 0 0 0-.1406-.1914c-.3312-.364-.9054-.4859-1.379-.203-.475.282-.7136.9361-.3886 1.5019 1.9466 3.3696-.0966-.2158 1.9473 3.3593.0172.031-.4946.2642-1.3926 1.0177C2.8987 12.176.452 14.772 0 18.9902h24c-.119-1.1108-.3686-2.099-.7461-3.0683-.7438-1.9118-1.8435-3.2928-2.7402-4.1836a12.1048 12.1048 0 0 0-2.1309-1.6875c.6594-1.122 1.312-2.2559 1.9649-3.3848.2077-.3615.1886-.7956-.0079-1.1191a1.1001 1.1001 0 0 0-.8515-.5332c-.5225-.0536-.9392.3128-1.0488.5449zm-.0391 8.461c.3944.5926.324 1.3306-.1563 1.6503-.4799.3197-1.188.0985-1.582-.4941-.3944-.5927-.324-1.3307.1563-1.6504.4727-.315 1.1812-.1086 1.582.4941zM7.207 13.5273c.4803.3197.5506 1.0577.1563 1.6504-.394.5926-1.1038.8138-1.584.4941-.48-.3197-.5503-1.0577-.1563-1.6504.4008-.6021 1.1087-.8106 1.584-.4941z"/></symbol><symbol id="i-apachekafka" viewBox="0 0 24 24"><path d="M9.71 2.136a1.43 1.43 0 0 0-2.047 0h-.007a1.48 1.48 0 0 0-.421 1.042c0 .41.161.777.422 1.039l.007.007c.257.264.616.426 1.019.426.404 0 .766-.162 1.027-.426l.003-.007c.261-.262.421-.629.421-1.039 0-.408-.159-.777-.421-1.042H9.71zM8.683 22.295c.404 0 .766-.167 1.027-.429l.003-.008c.261-.261.421-.631.421-1.036 0-.41-.159-.778-.421-1.044H9.71a1.42 1.42 0 0 0-1.027-.432 1.4 1.4 0 0 0-1.02.432h-.007c-.26.266-.422.634-.422 1.044 0 .406.161.775.422 1.036l.007.008c.258.262.617.429 1.02.429zm7.89-4.462c.359-.096.683-.33.882-.684l.027-.052a1.47 1.47 0 0 0 .114-1.067 1.454 1.454 0 0 0-.675-.896l-.021-.014a1.425 1.425 0 0 0-1.078-.132c-.36.091-.684.335-.881.686-.2.349-.241.75-.146 1.119.099.363.33.691.675.896h.002c.346.203.737.239 1.101.144zm-6.405-7.342a2.083 2.083 0 0 0-1.485-.627c-.58 0-1.103.242-1.482.627-.378.385-.612.916-.612 1.507s.233 1.124.612 1.514a2.08 2.08 0 0 0 2.967 0c.379-.39.612-.923.612-1.514s-.233-1.122-.612-1.507zm-.835-2.51c.843.141 1.6.552 2.178 1.144h.004c.092.093.182.196.265.299l1.446-.851a3.176 3.176 0 0 1-.047-1.808 3.149 3.149 0 0 1 1.456-1.926l.025-.016a3.062 3.062 0 0 1 2.345-.306c.77.21 1.465.721 1.898 1.482v.002c.431.757.518 1.626.313 2.408a3.145 3.145 0 0 1-1.456 1.928l-.198.118h-.02a3.095 3.095 0 0 1-2.154.201 3.127 3.127 0 0 1-1.514-.944l-1.444.848a4.162 4.162 0 0 1 0 2.879l1.444.846c.413-.47.939-.789 1.514-.944a3.041 3.041 0 0 1 2.371.319l.048.023v.002a3.17 3.17 0 0 1 1.408 1.906 3.215 3.215 0 0 1-.313 2.405l-.026.053-.003-.005a3.147 3.147 0 0 1-1.867 1.436 3.096 3.096 0 0 1-2.371-.318v-.006a3.156 3.156 0 0 1-1.456-1.927 3.175 3.175 0 0 1 .047-1.805l-1.446-.848a3.905 3.905 0 0 1-.265.294l-.004.005a3.938 3.938 0 0 1-2.178 1.138v1.699a3.09 3.09 0 0 1 1.56.862l.002.004c.565.572.914 1.368.914 2.243 0 .873-.35 1.664-.914 2.239l-.002.009a3.1 3.1 0 0 1-2.21.931 3.1 3.1 0 0 1-2.206-.93h-.002v-.009a3.186 3.186 0 0 1-.916-2.239c0-.875.35-1.672.916-2.243v-.004h.002a3.1 3.1 0 0 1 1.558-.862v-1.699a3.926 3.926 0 0 1-2.176-1.138l-.006-.005a4.098 4.098 0 0 1-1.173-2.874c0-1.122.452-2.136 1.173-2.872h.006a3.947 3.947 0 0 1 2.176-1.144V6.289a3.137 3.137 0 0 1-1.558-.864h-.002v-.004a3.192 3.192 0 0 1-.916-2.243c0-.871.35-1.669.916-2.243l.002-.002A3.084 3.084 0 0 1 8.683 0c.861 0 1.641.355 2.21.932v.002h.002c.565.574.914 1.372.914 2.243 0 .876-.35 1.667-.914 2.243l-.002.005a3.142 3.142 0 0 1-1.56.864v1.692zm8.121-1.129l-.012-.019a1.452 1.452 0 0 0-.87-.668 1.43 1.43 0 0 0-1.103.146h.002c-.347.2-.58.529-.677.896-.095.365-.054.768.146 1.119l.007.009c.2.347.519.579.874.673.357.103.755.059 1.098-.144l.019-.009a1.47 1.47 0 0 0 .657-.885 1.493 1.493 0 0 0-.141-1.118"/></symbol><symbol id="i-astro" viewBox="0 0 24 24"><path d="M8.358 20.162c-1.186-1.07-1.532-3.316-1.038-4.944.856 1.026 2.043 1.352 3.272 1.535 1.897.283 3.76.177 5.522-.678.202-.098.388-.229.608-.36.166.473.209.95.151 1.437-.14 1.185-.738 2.1-1.688 2.794-.38.277-.782.525-1.175.787-1.205.804-1.531 1.747-1.078 3.119l.044.148a3.158 3.158 0 0 1-1.407-1.188 3.31 3.31 0 0 1-.544-1.815c-.004-.32-.004-.642-.048-.958-.106-.769-.472-1.113-1.161-1.133-.707-.02-1.267.411-1.415 1.09-.012.053-.028.104-.045.165h.002zm-5.961-4.445s3.24-1.575 6.49-1.575l2.451-7.565c.092-.366.36-.614.662-.614.302 0 .57.248.662.614l2.45 7.565c3.85 0 6.491 1.575 6.491 1.575L16.088.727C15.93.285 15.663 0 15.303 0H8.697c-.36 0-.615.285-.784.727l-5.516 14.99z"/></symbol><symbol id="i-cplusplus" viewBox="0 0 24 24"><path d="M22.394 6c-.167-.29-.398-.543-.652-.69L12.926.22c-.509-.294-1.34-.294-1.848 0L2.26 5.31c-.508.293-.923 1.013-.923 1.6v10.18c0 .294.104.62.271.91.167.29.398.543.652.69l8.816 5.09c.508.293 1.34.293 1.848 0l8.816-5.09c.254-.147.485-.4.652-.69.167-.29.27-.616.27-.91V6.91c.003-.294-.1-.62-.268-.91zM12 19.11c-3.92 0-7.109-3.19-7.109-7.11 0-3.92 3.19-7.11 7.11-7.11a7.133 7.133 0 016.156 3.553l-3.076 1.78a3.567 3.567 0 00-3.08-1.78A3.56 3.56 0 008.444 12 3.56 3.56 0 0012 15.555a3.57 3.57 0 003.08-1.778l3.078 1.78A7.135 7.135 0 0112 19.11zm7.11-6.715h-.79v.79h-.79v-.79h-.79v-.79h.79v-.79h.79v.79h.79zm2.962 0h-.79v.79h-.79v-.79h-.79v-.79h.79v-.79h.79v.79h.79z"/></symbol><symbol id="i-docker" viewBox="0 0 24 24"><path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.185.185 0 00-.185.185v1.888c0 .102.083.185.185.185m-2.954-5.43h2.118a.186.186 0 00.186-.186V3.574a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m0 2.716h2.118a.187.187 0 00.186-.186V6.29a.186.186 0 00-.186-.185h-2.118a.185.185 0 00-.185.185v1.887c0 .102.082.185.185.186m-2.93 0h2.12a.186.186 0 00.184-.186V6.29a.185.185 0 00-.185-.185H8.1a.185.185 0 00-.185.185v1.887c0 .102.083.185.185.186m-2.964 0h2.119a.186.186 0 00.185-.186V6.29a.185.185 0 00-.185-.185H5.136a.186.186 0 00-.186.185v1.887c0 .102.084.185.186.186m5.893 2.715h2.118a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.118a.185.185 0 00-.185.185v1.888c0 .102.082.185.185.185m-2.93 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.083.185.185.185m-2.964 0h2.119a.185.185 0 00.185-.185V9.006a.185.185 0 00-.184-.186h-2.12a.186.186 0 00-.186.186v1.887c0 .102.084.185.186.185m-2.92 0h2.12a.185.185 0 00.184-.185V9.006a.185.185 0 00-.184-.186h-2.12a.185.185 0 00-.184.185v1.888c0 .102.082.185.185.185M23.763 9.89c-.065-.051-.672-.51-1.954-.51-.338.001-.676.03-1.01.087-.248-1.7-1.653-2.53-1.716-2.566l-.344-.199-.226.327c-.284.438-.49.922-.612 1.43-.23.97-.09 1.882.403 2.661-.595.332-1.55.413-1.744.42H.751a.751.751 0 00-.75.748 11.376 11.376 0 00.692 4.062c.545 1.428 1.355 2.48 2.41 3.124 1.18.723 3.1 1.137 5.275 1.137.983.003 1.963-.086 2.93-.266a12.248 12.248 0 003.823-1.389c.98-.567 1.86-1.288 2.61-2.136 1.252-1.418 1.998-2.997 2.553-4.4h.221c1.372 0 2.215-.549 2.68-1.009.309-.293.55-.65.707-1.046l.098-.288Z"/></symbol><symbol id="i-dotnet" viewBox="0 0 24 24"><path d="M24 8.77h-2.468v7.565h-1.425V8.77h-2.462V7.53H24zm-6.852 7.565h-4.821V7.53h4.63v1.24h-3.205v2.494h2.953v1.234h-2.953v2.604h3.396zm-6.708 0H8.882L4.78 9.863a2.896 2.896 0 0 1-.258-.51h-.036c.032.189.048.592.048 1.21v5.772H3.157V7.53h1.659l3.965 6.32c.167.261.275.442.323.54h.024c-.04-.233-.06-.629-.06-1.185V7.529h1.372zm-8.703-.693a.868.829 0 0 1-.869.829.868.829 0 0 1-.868-.83.868.829 0 0 1 .868-.828.868.829 0 0 1 .869.829Z"/></symbol><symbol id="i-express" viewBox="0 0 24 24"><path d="M12.262 16.666h1.146l6.975-9.325H19.22zm9.778 1.441v.004l-4.334-5.706-.557.74 4.873 6.682H.945V4.173h9.505l5.026 6.7.574-.772-4.374-5.928h.003l-.719-.945H0v17.544h24zM10.917 8.705a3.8 3.8 0 0 0-1.292-1.183q-.796-.45-1.916-.45c-.746 0-1.37.14-1.906.424a3.76 3.76 0 0 0-1.31 1.12 4.9 4.9 0 0 0-.75 1.581 7.17 7.17 0 0 0 0 3.696c.148.567.402 1.101.75 1.573a3.5 3.5 0 0 0 1.31 1.066q.803.39 1.906.389 1.77 0 2.739-.868.966-.867 1.328-2.457h-1.139q-.271 1.084-.977 1.734-.704.651-1.952.65-.812 0-1.392-.342a3.1 3.1 0 0 1-.957-.869 3.5 3.5 0 0 1-.551-1.182 5 5 0 0 1-.17-1.133 9 9 0 0 0-.015-.286 4.5 4.5 0 0 1 .015-.829c.047-.418.147-.83.296-1.223A3.7 3.7 0 0 1 5.54 9.05a2.9 2.9 0 0 1 .922-.742q.541-.28 1.246-.28c.47 0 .869.093 1.23.28q.541.281.922.742.379.461.587 1.057t.225 1.246H5.625l.004.957h6.182a7.3 7.3 0 0 0-.18-1.924 4.9 4.9 0 0 0-.715-1.68z"/></symbol><symbol id="i-git" viewBox="0 0 24 24"><path d="M13.09 23.549a1.54 1.54 0 0 1-2.18 0L.451 13.089a1.54 1.54 0 0 1 0-2.179l7.191-7.19 2.733 2.733a1.85 1.85 0 0 0 .964 2.326v6.66a1.849 1.849 0 1 0 1.54 0V8.957l2.508 2.508a1.85 1.85 0 1 0 1.09-1.09l-2.634-2.634a1.85 1.85 0 0 0-2.378-2.377L8.73 2.63 10.91.451a1.54 1.54 0 0 1 2.179 0l10.459 10.46a1.54 1.54 0 0 1 0 2.179z"/></symbol><symbol id="i-googlecloud" viewBox="0 0 24 24"><path d="M12.19 2.38a9.344 9.344 0 0 0-9.234 6.893c.053-.02-.055.013 0 0-3.875 2.551-3.922 8.11-.247 10.941l.006-.007-.007.03a6.717 6.717 0 0 0 4.077 1.356h5.173l.03.03h5.192c6.687.053 9.376-8.605 3.835-12.35a9.365 9.365 0 0 0-2.821-4.552l-.043.043.006-.05A9.344 9.344 0 0 0 12.19 2.38zm-.358 4.146c1.244-.04 2.518.368 3.486 1.15a5.186 5.186 0 0 1 1.862 4.078v.518c3.53-.07 3.53 5.262 0 5.193h-5.193l-.008.009v-.04H6.785a2.59 2.59 0 0 1-1.067-.23h.001a2.597 2.597 0 1 1 3.437-3.437l3.013-3.012A6.747 6.747 0 0 0 8.11 8.24c.018-.01.04-.026.054-.023a5.186 5.186 0 0 1 3.67-1.69z"/></symbol><symbol id="i-graphql" viewBox="0 0 24 24"><path d="M12.002 0a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm8.54 4.931a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm0 9.862a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm-8.54 4.931a2.138 2.138 0 1 0 0 4.276 2.138 2.138 0 1 0 0-4.276zm-8.542-4.93a2.138 2.138 0 1 0 0 4.276 2.138 2.138 0 1 0 0-4.277zm0-9.863a2.138 2.138 0 1 0 0 4.277 2.138 2.138 0 1 0 0-4.277zm8.542-3.378L2.953 6.777v10.448l9.049 5.224 9.047-5.224V6.777zm0 1.601 7.66 13.27H4.34zm-1.387.371L3.97 15.037V7.363zm2.774 0 6.646 3.838v7.674zM5.355 17.44h13.293l-6.646 3.836z"/></symbol><symbol id="i-kotlin" viewBox="0 0 24 24"><path d="M24 24H0V0h24L12 12Z"/></symbol><symbol id="i-linux" viewBox="0 0 24 24"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071.771-.06 1.592-.536 2.257-1.306.631-.765 1.683-1.084 2.378-1.503.348-.199.629-.469.649-.853.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.357.357 0 00-.19-.064c.431-1.278.264-2.55-.173-3.694-.533-1.41-1.465-2.638-2.175-3.483-.796-1.005-1.576-1.957-1.56-3.368.026-2.152.236-6.133-3.544-6.139zm.529 3.405h.013c.213 0 .396.062.584.198.19.135.33.332.438.533.105.259.158.459.166.724 0-.02.006-.04.006-.06v.105a.086.086 0 01-.004-.021l-.004-.024a1.807 1.807 0 01-.15.706.953.953 0 01-.213.335.71.71 0 00-.088-.042c-.104-.045-.198-.064-.284-.133a1.312 1.312 0 00-.22-.066c.05-.06.146-.133.183-.198.053-.128.082-.264.088-.402v-.02a1.21 1.21 0 00-.061-.4c-.045-.134-.101-.2-.183-.333-.084-.066-.167-.132-.267-.132h-.016c-.093 0-.176.03-.262.132a.8.8 0 00-.205.334 1.18 1.18 0 00-.09.4v.019c.002.089.008.179.02.267-.193-.067-.438-.135-.607-.202a1.635 1.635 0 01-.018-.2v-.02a1.772 1.772 0 01.15-.768c.082-.22.232-.406.43-.533a.985.985 0 01.594-.2zm-2.962.059h.036c.142 0 .27.048.399.135.146.129.264.288.344.465.09.199.14.4.153.667v.004c.007.134.006.2-.002.266v.08c-.03.007-.056.018-.083.024-.152.055-.274.135-.393.2.012-.09.013-.18.003-.267v-.015c-.012-.133-.04-.2-.082-.333a.613.613 0 00-.166-.267.248.248 0 00-.183-.064h-.021c-.071.006-.13.04-.186.132a.552.552 0 00-.12.27.944.944 0 00-.023.33v.015c.012.135.037.2.08.334.046.134.098.2.166.268.01.009.02.018.034.024-.07.057-.117.07-.176.136a.304.304 0 01-.131.068 2.62 2.62 0 01-.275-.402 1.772 1.772 0 01-.155-.667 1.759 1.759 0 01.08-.668 1.43 1.43 0 01.283-.535c.128-.133.26-.2.418-.2zm1.37 1.706c.332 0 .733.065 1.216.399.293.2.523.269 1.052.468h.003c.255.136.405.266.478.399v-.131a.571.571 0 01.016.47c-.123.31-.516.643-1.063.842v.002c-.268.135-.501.333-.775.465-.276.135-.588.292-1.012.267a1.139 1.139 0 01-.448-.067 3.566 3.566 0 01-.322-.198c-.195-.135-.363-.332-.612-.465v-.005h-.005c-.4-.246-.616-.512-.686-.71-.07-.268-.005-.47.193-.6.224-.135.38-.271.483-.336.104-.074.143-.102.176-.131h.002v-.003c.169-.202.436-.47.839-.601.139-.036.294-.065.466-.065zm2.8 2.142c.358 1.417 1.196 3.475 1.735 4.473.286.534.855 1.659 1.102 3.024.156-.005.33.018.513.064.646-1.671-.546-3.467-1.089-3.966-.22-.2-.232-.335-.123-.335.59.534 1.365 1.572 1.646 2.757.13.535.16 1.104.021 1.67.067.028.135.06.205.067 1.032.534 1.413.938 1.23 1.537v-.043c-.06-.003-.12 0-.18 0h-.016c.151-.467-.182-.825-1.065-1.224-.915-.4-1.646-.336-1.77.465-.008.043-.013.066-.018.135-.068.023-.139.053-.209.064-.43.268-.662.669-.793 1.187-.13.533-.17 1.156-.205 1.869v.003c-.02.334-.17.838-.319 1.35-1.5 1.072-3.58 1.538-5.348.334a2.645 2.645 0 00-.402-.533 1.45 1.45 0 00-.275-.333c.182 0 .338-.03.465-.067a.615.615 0 00.314-.334c.108-.267 0-.697-.345-1.163-.345-.467-.931-.995-1.788-1.521-.63-.4-.986-.87-1.15-1.396-.165-.534-.143-1.085-.015-1.645.245-1.07.873-2.11 1.274-2.763.107-.065.037.135-.408.974-.396.751-1.14 2.497-.122 3.854a8.123 8.123 0 01.647-2.876c.564-1.278 1.743-3.504 1.836-5.268.048.036.217.135.289.202.218.133.38.333.59.465.21.201.477.335.876.335.039.003.075.006.11.006.412 0 .73-.134.997-.268.29-.134.52-.334.74-.4h.005c.467-.135.835-.402 1.044-.7zm2.185 8.958c.037.6.343 1.245.882 1.377.588.134 1.434-.333 1.791-.765l.211-.01c.315-.007.577.01.847.268l.003.003c.208.199.305.53.391.876.085.4.154.78.409 1.066.486.527.645.906.636 1.14l.003-.007v.018l-.003-.012c-.015.262-.185.396-.498.595-.63.401-1.746.712-2.457 1.57-.618.737-1.37 1.14-2.036 1.191-.664.053-1.237-.2-1.574-.898l-.005-.003c-.21-.4-.12-1.025.056-1.69.176-.668.428-1.344.463-1.897.037-.714.076-1.335.195-1.814.12-.465.308-.797.641-.984l.045-.022zm-10.814.049h.01c.053 0 .105.005.157.014.376.055.706.333 1.023.752l.91 1.664.003.003c.243.533.754 1.064 1.189 1.637.434.598.77 1.131.729 1.57v.006c-.057.744-.48 1.148-1.125 1.294-.645.135-1.52.002-2.395-.464-.968-.536-2.118-.469-2.857-.602-.369-.066-.61-.2-.723-.4-.11-.2-.113-.602.123-1.23v-.004l.002-.003c.117-.334.03-.752-.027-1.118-.055-.401-.083-.71.043-.94.16-.334.396-.4.69-.533.294-.135.64-.202.915-.47h.002v-.002c.256-.268.445-.601.668-.838.19-.201.38-.336.663-.336zm7.159-9.074c-.435.201-.945.535-1.488.535-.542 0-.97-.267-1.28-.466-.154-.134-.28-.268-.373-.335-.164-.134-.144-.333-.074-.333.109.016.129.134.199.2.096.066.215.2.36.333.292.2.68.467 1.167.467.485 0 1.053-.267 1.398-.466.195-.135.445-.334.648-.467.156-.136.149-.267.279-.267.128.016.034.134-.147.332a8.097 8.097 0 01-.69.468zm-1.082-1.583V5.64c-.006-.02.013-.042.029-.05.074-.043.18-.027.26.004.063 0 .16.067.15.135-.006.049-.085.066-.135.066-.055 0-.092-.043-.141-.068-.052-.018-.146-.008-.163-.065zm-.551 0c-.02.058-.113.049-.166.066-.047.025-.086.068-.14.068-.05 0-.13-.02-.136-.068-.01-.066.088-.133.15-.133.08-.031.184-.047.259-.005.019.009.036.03.03.05v.02h.003z"/></symbol><symbol id="i-mariadb" viewBox="0 0 24 24"><path d="M23.157 4.412c-.676.284-.79.31-1.673.372-.65.045-.757.057-1.212.209-.75.246-1.395.75-2.02 1.59-.296.398-1.249 1.913-1.249 1.988 0 .057-.65.998-.915 1.32-.574.713-1.08 1.079-2.14 1.59-.77.36-1.224.524-4.102 1.477-1.073.353-2.133.738-2.367.864-.852.449-1.515 1.036-2.203 1.938-1.003 1.32-.972 1.313-3.042.947a12.264 12.264 0 00-.675-.063c-.644-.05-1.023.044-1.332.334L0 17.193l.177.088c.094.05.353.234.561.398.215.17.461.347.55.391.088.044.17.088.183.101.012.013-.089.17-.228.353-.435.581-.593.871-.574 1.048.019.164.032.17.43.17.517-.006.826-.056 1.261-.208.65-.233 2.058-.94 2.784-1.4.776-.5 1.717-.998 1.956-1.042.082-.02.354-.07.594-.114.58-.107 1.464-.095 2.587.05.108.013.373.045.6.064.227.025.43.057.454.076.026.012.474.037.998.056.934.026 1.104.007 1.3-.189.126-.133.385-.631.498-.985.209-.643.417-.921.366-.492-.113.966-.322 1.692-.713 2.411-.259.499-.663 1.092-.934 1.395-.322.347-.315.36.088.315.619-.063 1.471-.397 2.096-.82.827-.562 1.647-1.691 2.19-3.03.107-.27.22-.22.183.083-.013.094-.038.315-.057.498l-.031.328.353-.202c.833-.48 1.414-1.262 2.127-2.884.227-.518.877-2.922 1.073-3.976a9.64 9.64 0 01.271-1.042c.127-.429.196-.555.48-.858.183-.19.625-.555.978-.808.72-.505.953-.75 1.187-1.205.208-.417.284-1.13.132-1.357-.132-.202-.284-.196-.763.006Z"/></symbol><symbol id="i-mysql" viewBox="0 0 24 24"><path d="M16.405 5.501c-.115 0-.193.014-.274.033v.013h.014c.054.104.146.18.214.273.054.107.1.214.154.32l.014-.015c.094-.066.14-.172.14-.333-.04-.047-.046-.094-.08-.14-.04-.067-.126-.1-.18-.153zM5.77 18.695h-.927a50.854 50.854 0 00-.27-4.41h-.008l-1.41 4.41H2.45l-1.4-4.41h-.01a72.892 72.892 0 00-.195 4.41H0c.055-1.966.192-3.81.41-5.53h1.15l1.335 4.064h.008l1.347-4.064h1.095c.242 2.015.384 3.86.428 5.53zm4.017-4.08c-.378 2.045-.876 3.533-1.492 4.46-.482.716-1.01 1.073-1.583 1.073-.153 0-.34-.046-.566-.138v-.494c.11.017.24.026.386.026.268 0 .483-.075.647-.222.197-.18.295-.382.295-.605 0-.155-.077-.47-.23-.944L6.23 14.615h.91l.727 2.36c.164.536.233.91.205 1.123.4-1.064.678-2.227.835-3.483zm12.325 4.08h-2.63v-5.53h.885v4.85h1.745zm-3.32.135l-1.016-.5c.09-.076.177-.158.255-.25.433-.506.648-1.258.648-2.253 0-1.83-.718-2.746-2.155-2.746-.704 0-1.254.232-1.65.697-.43.508-.646 1.256-.646 2.245 0 .972.19 1.686.574 2.14.35.41.877.615 1.583.615.264 0 .506-.033.725-.098l1.325.772.36-.622zM15.5 17.588c-.225-.36-.337-.94-.337-1.736 0-1.393.424-2.09 1.27-2.09.443 0 .77.167.977.5.224.362.336.936.336 1.723 0 1.404-.424 2.108-1.27 2.108-.445 0-.77-.167-.978-.5zm-1.658-.425c0 .47-.172.856-.516 1.156-.344.3-.803.45-1.384.45-.543 0-1.064-.172-1.573-.515l.237-.476c.438.22.833.328 1.19.328.332 0 .593-.073.783-.22a.754.754 0 00.3-.615c0-.33-.23-.61-.648-.845-.388-.213-1.163-.657-1.163-.657-.422-.307-.632-.636-.632-1.177 0-.45.157-.81.47-1.085.315-.278.72-.415 1.22-.415.512 0 .98.136 1.4.41l-.213.476a2.726 2.726 0 00-1.064-.23c-.283 0-.502.068-.654.206a.685.685 0 00-.248.524c0 .328.234.61.666.85.393.215 1.187.67 1.187.67.433.305.648.63.648 1.168zm9.382-5.852c-.535-.014-.95.04-1.297.188-.1.04-.26.04-.274.167.055.053.063.14.11.214.08.134.218.313.346.407.14.11.28.216.427.31.26.16.555.255.81.416.145.094.293.213.44.313.073.05.12.14.214.172v-.02c-.046-.06-.06-.147-.105-.214-.067-.067-.134-.127-.2-.193a3.223 3.223 0 00-.695-.675c-.214-.146-.682-.35-.77-.595l-.013-.014c.146-.013.32-.066.46-.106.227-.06.435-.047.67-.106.106-.027.213-.06.32-.094v-.06c-.12-.12-.21-.283-.334-.395a8.867 8.867 0 00-1.104-.823c-.21-.134-.476-.22-.697-.334-.08-.04-.214-.06-.26-.127-.12-.146-.19-.34-.275-.514a17.69 17.69 0 01-.547-1.163c-.12-.262-.193-.523-.34-.763-.69-1.137-1.437-1.826-2.586-2.5-.247-.14-.543-.2-.856-.274-.167-.008-.334-.02-.5-.027-.11-.047-.216-.174-.31-.235-.38-.24-1.364-.76-1.644-.072-.18.434.267.862.422 1.082.115.153.26.328.34.5.047.116.06.235.107.356.106.294.207.622.347.897.073.14.153.287.247.413.054.073.146.107.167.227-.094.136-.1.334-.154.5-.24.757-.146 1.693.194 2.25.107.166.362.534.703.393.3-.12.234-.5.32-.835.02-.08.007-.133.048-.187v.015c.094.188.188.367.274.555.206.328.566.668.867.895.16.12.287.328.487.402v-.02h-.015c-.043-.058-.1-.086-.154-.133a3.445 3.445 0 01-.35-.4 8.76 8.76 0 01-.747-1.218c-.11-.21-.202-.436-.29-.643-.04-.08-.04-.2-.107-.24-.1.146-.247.273-.32.453-.127.288-.14.642-.188 1.01-.027.007-.014 0-.027.014-.214-.052-.287-.274-.367-.46-.2-.475-.233-1.238-.06-1.785.047-.14.247-.582.167-.716-.042-.127-.174-.2-.247-.303a2.478 2.478 0 01-.24-.427c-.16-.374-.24-.788-.414-1.162-.08-.173-.22-.354-.334-.513-.127-.18-.267-.307-.368-.52-.033-.073-.08-.194-.027-.274.014-.054.042-.075.094-.09.088-.072.335.022.422.062.247.1.455.194.662.334.094.066.195.193.315.226h.14c.214.047.455.014.655.073.355.114.675.28.962.46a5.953 5.953 0 012.085 2.286c.08.154.115.295.188.455.14.33.313.663.455.982.14.315.275.636.476.897.1.14.502.213.682.286.133.06.34.115.46.188.23.14.454.3.67.454.11.076.443.243.463.378z"/></symbol><symbol id="i-n8n" viewBox="0 0 24 24"><path d="M4.8 16.8c.45 0 .6-.15.6-.6V15c0-1.8.6-2.4 2.4-2.4H9c1.8 0 2.4.6 2.4 2.4v1.2c0 .45.15.6.6.6s.6-.15.6-.6V15c0-1.8.6-2.4 2.4-2.4h1.2c1.8 0 2.4.6 2.4 2.4v1.2c0 .45.15.6.6.6s.6-.15.6-.6V15c0-1.8.6-2.4 2.4-2.4h1.2c.45 0 .6-.15.6-.6s-.15-.6-.6-.6h-1.2c-1.8 0-2.4-.6-2.4-2.4V7.8c0-.45-.15-.6-.6-.6s-.6.15-.6.6V9c0 1.8-.6 2.4-2.4 2.4H15c-1.8 0-2.4-.6-2.4-2.4V7.8c0-.45-.15-.6-.6-.6s-.6.15-.6.6V9c0 1.8-.6 2.4-2.4 2.4H7.8c-1.8 0-2.4-.6-2.4-2.4V7.8c0-.45-.15-.6-.6-.6s-.6.15-.6.6V9c0 1.8-.6 2.4-2.4 2.4H.6c-.45 0-.6.15-.6.6s.15.6.6.6h1.2c1.8 0 2.4.6 2.4 2.4v1.2c0 .45.15.6.6.6"/></symbol><symbol id="i-nestjs" viewBox="0 0 24 24"><path d="M14.131.047c-.173 0-.334.037-.483.087.316.21.49.49.576.806.007.043.019.074.025.117a.681.681 0 0 1 .013.112c.024.545-.143.614-.26.936-.18.415-.13.861.086 1.22a.74.74 0 0 0 .074.137c-.235-1.568 1.073-1.803 1.314-2.293.019-.428-.334-.713-.613-.911a1.37 1.37 0 0 0-.732-.21zM16.102.4c-.024.143-.006.106-.012.18-.006.05-.006.112-.012.161-.013.05-.025.1-.044.149-.012.05-.03.1-.05.149l-.067.142c-.02.025-.031.05-.05.075l-.037.055a2.152 2.152 0 0 1-.093.124c-.037.038-.068.081-.112.112v.006c-.037.031-.074.068-.118.1-.13.099-.278.173-.415.266-.043.03-.087.056-.124.093a.906.906 0 0 0-.118.099c-.043.037-.074.074-.111.118-.031.037-.068.08-.093.124a1.582 1.582 0 0 0-.087.13c-.025.05-.043.093-.068.142-.019.05-.037.093-.05.143a2.007 2.007 0 0 0-.043.155c-.006.025-.006.056-.012.08-.007.025-.007.05-.013.075 0 .05-.006.105-.006.155 0 .037 0 .074.006.111 0 .05.006.1.019.155.006.05.018.1.03.15.02.049.032.098.05.148.013.03.031.062.044.087l-1.426-.552c-.241-.068-.477-.13-.719-.186l-.39-.093c-.372-.074-.75-.13-1.128-.167-.013 0-.019-.006-.031-.006A11.082 11.082 0 0 0 8.9 2.855c-.378.025-.756.074-1.134.136a12.45 12.45 0 0 0-.837.174l-.279.074c-.092.037-.18.08-.266.118l-.205.093c-.012.006-.024.006-.03.012-.063.031-.118.056-.174.087a2.738 2.738 0 0 0-.236.118c-.043.018-.086.043-.124.062a.559.559 0 0 1-.055.03c-.056.032-.112.063-.162.094a1.56 1.56 0 0 0-.148.093c-.044.03-.087.055-.124.086-.006.007-.013.007-.019.013-.037.025-.08.056-.118.087l-.012.012-.093.074c-.012.007-.025.019-.037.025-.031.025-.062.056-.093.08-.006.013-.019.02-.025.025-.037.038-.074.069-.111.106-.007 0-.007.006-.013.012a1.742 1.742 0 0 0-.111.106c-.007.006-.007.012-.013.012a1.454 1.454 0 0 0-.093.1c-.012.012-.03.024-.043.036a1.374 1.374 0 0 1-.106.112c-.006.012-.018.019-.024.03-.05.05-.093.1-.143.15l-.018.018c-.1.106-.205.211-.317.304-.111.1-.229.192-.347.273a3.777 3.777 0 0 1-.762.421c-.13.056-.267.106-.403.149-.26.056-.527.161-.756.18-.05 0-.105.012-.155.018l-.155.037-.149.056c-.05.019-.099.044-.148.068-.044.031-.093.056-.137.087a1.011 1.011 0 0 0-.124.106c-.043.03-.087.074-.124.111-.037.043-.074.08-.105.124-.031.05-.068.093-.093.143a1.092 1.092 0 0 0-.087.142c-.025.056-.05.106-.068.161-.019.05-.037.106-.056.161-.012.05-.025.1-.03.15 0 .005-.007.012-.007.018-.012.056-.012.13-.019.167C.006 7.95 0 7.986 0 8.03a.657.657 0 0 0 .074.31v.006c.019.037.044.075.069.112.024.037.05.074.08.111.031.031.068.069.106.1a.906.906 0 0 0 .117.099c.149.13.186.173.378.272.031.019.062.031.1.05.006 0 .012.006.018.006 0 .013 0 .019.006.031a1.272 1.272 0 0 0 .08.298c.02.037.032.074.05.111.007.013.013.025.02.031.024.05.049.093.073.137l.093.13c.031.037.069.08.106.118.037.037.074.068.118.105 0 0 .006.006.012.006.037.031.074.062.112.087a.986.986 0 0 0 .136.08c.043.025.093.05.142.069a.73.73 0 0 0 .124.043c.007.006.013.006.025.012.025.007.056.013.08.019-.018.335-.024.65.026.762.055.124.328-.254.6-.688-.036.428-.061.93 0 1.079.069.155.44-.329.763-.862 4.395-1.016 8.405 2.02 8.826 6.31-.08-.67-.905-1.041-1.283-.948-.186.458-.502 1.047-1.01 1.413.043-.41.025-.83-.062-1.24a4.009 4.009 0 0 1-.769 1.562c-.588.043-1.177-.242-1.487-.67-.025-.018-.031-.055-.05-.08-.018-.043-.037-.087-.05-.13a.515.515 0 0 1-.037-.13c-.006-.044-.006-.087-.006-.137v-.093a.992.992 0 0 1 .031-.13c.013-.043.025-.086.044-.13.024-.043.043-.087.074-.13.105-.298.105-.54-.087-.682a.706.706 0 0 0-.118-.062c-.024-.006-.055-.018-.08-.025l-.05-.018a.847.847 0 0 0-.13-.031.472.472 0 0 0-.13-.019 1.01 1.01 0 0 0-.136-.012c-.031 0-.062.006-.093.006a.484.484 0 0 0-.137.019c-.043.006-.086.012-.13.024a1.068 1.068 0 0 0-.13.044c-.043.018-.08.037-.124.056-.037.018-.074.043-.118.062-1.444.942-.582 3.148.403 3.787-.372.068-.75.148-.855.229l-.013.012c.267.161.546.298.837.416.397.13.818.247 1.004.297v.006a5.996 5.996 0 0 0 1.562.112c2.746-.192 4.996-2.281 5.405-5.033l.037.161c.019.112.043.23.056.347v.006c.012.056.018.112.025.162v.024c.006.056.012.112.012.162.006.068.012.136.012.204v.1c0 .03.007.067.007.098 0 .038-.007.075-.007.112v.087c0 .043-.006.08-.006.124 0 .025 0 .05-.006.08 0 .044-.006.087-.006.137-.006.018-.006.037-.006.055l-.02.143c0 .019 0 .037-.005.056-.007.062-.019.118-.025.18v.012l-.037.174v.018l-.037.167c0 .007-.007.02-.007.025a1.663 1.663 0 0 1-.043.168v.018c-.019.062-.037.118-.05.174-.006.006-.006.012-.006.012l-.056.186c-.024.062-.043.118-.068.18-.025.062-.043.124-.068.18-.025.062-.05.117-.074.18h-.007c-.024.055-.05.117-.08.173a.302.302 0 0 1-.019.043c-.006.006-.006.013-.012.019a5.867 5.867 0 0 1-1.742 2.082c-.05.031-.099.069-.149.106-.012.012-.03.018-.043.03a2.603 2.603 0 0 1-.136.094l.018.037h.007l.26-.037h.006c.161-.025.322-.056.483-.087.044-.006.093-.019.137-.031l.087-.019c.043-.006.086-.018.13-.024.037-.013.074-.02.111-.031.62-.15 1.221-.354 1.798-.595a9.926 9.926 0 0 1-3.85 3.142c.714-.05 1.426-.167 2.114-.366a9.903 9.903 0 0 0 5.857-4.68 9.893 9.893 0 0 1-1.667 3.986 9.758 9.758 0 0 0 1.655-1.376 9.824 9.824 0 0 0 2.61-5.268c.21.98.272 1.99.18 2.987 4.474-6.241.371-12.712-1.346-14.416-.006-.013-.012-.019-.012-.031-.006.006-.006.006-.006.012 0-.006 0-.006-.007-.012 0 .074-.006.148-.012.223a8.34 8.34 0 0 1-.062.415c-.03.136-.068.273-.105.41-.044.13-.093.266-.15.396a5.322 5.322 0 0 1-.185.378 4.735 4.735 0 0 1-.477.688c-.093.111-.192.21-.292.31a3.994 3.994 0 0 1-.18.155l-.142.124a3.459 3.459 0 0 1-.347.241 4.295 4.295 0 0 1-.366.211c-.13.062-.26.118-.39.174a4.364 4.364 0 0 1-.818.223c-.143.025-.285.037-.422.05a4.914 4.914 0 0 1-.297.012 4.66 4.66 0 0 1-.422-.025 3.137 3.137 0 0 1-.421-.062 3.136 3.136 0 0 1-.415-.105h-.007c.137-.013.273-.025.41-.05a4.493 4.493 0 0 0 .818-.223c.136-.05.266-.112.39-.174.13-.062.248-.13.372-.204.118-.08.235-.161.347-.248.112-.087.217-.18.316-.279.105-.093.198-.198.291-.304.093-.111.18-.223.26-.334.013-.019.026-.044.038-.062.062-.1.124-.199.18-.298a4.272 4.272 0 0 0 .334-.775c.044-.13.075-.266.106-.403.025-.142.05-.278.062-.415.012-.142.025-.285.025-.421 0-.1-.007-.199-.013-.298a6.726 6.726 0 0 0-.05-.415 4.493 4.493 0 0 0-.092-.415c-.044-.13-.087-.267-.137-.397-.05-.13-.111-.26-.173-.384-.069-.124-.137-.248-.211-.366a6.843 6.843 0 0 0-.248-.34c-.093-.106-.186-.212-.285-.317a3.878 3.878 0 0 0-.161-.155c-.28-.217-.57-.421-.862-.607a1.154 1.154 0 0 0-.124-.062 2.415 2.415 0 0 0-.589-.26Z"/></symbol><symbol id="i-nginx" viewBox="0 0 24 24"><path d="M12 0L1.605 6v12L12 24l10.395-6V6L12 0zm6 16.59c0 .705-.646 1.29-1.529 1.29-.631 0-1.351-.255-1.801-.81l-6-7.141v6.66c0 .721-.57 1.29-1.274 1.29H7.32c-.721 0-1.29-.6-1.29-1.29V7.41c0-.705.63-1.29 1.5-1.29.646 0 1.38.255 1.83.81l5.97 7.141V7.41c0-.721.6-1.29 1.29-1.29h.075c.72 0 1.29.6 1.29 1.29v9.18H18z"/></symbol><symbol id="i-nodedotjs" viewBox="0 0 24 24"><path d="M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"/></symbol><symbol id="i-openjdk" viewBox="0 0 24 24"><path d="M11.915 0 11.7.215C9.515 2.4 7.47 6.39 6.046 10.483c-1.064 1.024-3.633 2.81-3.711 3.551-.093.87 1.746 2.611 1.55 3.235-.198.625-1.304 1.408-1.014 1.939.1.188.823.011 1.277-.491a13.389 13.389 0 0 0-.017 2.14c.076.906.27 1.668.643 2.232.372.563.956.911 1.667.911.397 0 .727-.114 1.024-.264.298-.149.571-.33.91-.5.68-.34 1.634-.666 3.53-.604 1.903.062 2.872.39 3.559.704.687.314 1.15.664 1.925.664.767 0 1.395-.336 1.807-.9.412-.563.631-1.33.72-2.24.06-.623.055-1.32 0-2.066.454.45 1.117.604 1.213.424.29-.53-.816-1.314-1.013-1.937-.198-.624 1.642-2.366 1.549-3.236-.08-.748-2.707-2.568-3.748-3.586C16.428 6.374 14.308 2.394 12.13.215zm.175 6.038a2.95 2.95 0 0 1 2.943 2.942 2.95 2.95 0 0 1-2.943 2.943A2.95 2.95 0 0 1 9.148 8.98a2.95 2.95 0 0 1 2.942-2.942zM8.685 7.983a3.515 3.515 0 0 0-.145.997c0 1.951 1.6 3.55 3.55 3.55 1.95 0 3.55-1.598 3.55-3.55 0-.329-.046-.648-.132-.951.334.095.64.208.915.336a42.699 42.699 0 0 1 2.042 5.829c.678 2.545 1.01 4.92.846 6.607-.082.844-.29 1.51-.606 1.94-.315.431-.713.651-1.315.651-.593 0-.932-.27-1.673-.61-.741-.338-1.825-.694-3.792-.758-1.974-.064-3.073.293-3.821.669-.375.188-.659.373-.911.5s-.466.2-.752.2c-.53 0-.876-.209-1.16-.64-.285-.43-.474-1.101-.545-1.948-.141-1.693.176-4.069.823-6.614a43.155 43.155 0 0 1 1.934-5.783c.348-.167.749-.31 1.192-.425zm-3.382 4.362a.216.216 0 0 1 .13.031c-.166.56-.323 1.116-.463 1.665a33.849 33.849 0 0 0-.547 2.555 3.9 3.9 0 0 0-.2-.39c-.58-1.012-.914-1.642-1.16-2.08.315-.24 1.679-1.755 2.24-1.781zm13.394.01c.562.027 1.926 1.543 2.24 1.783-.246.438-.58 1.068-1.16 2.08a4.428 4.428 0 0 0-.163.309 32.354 32.354 0 0 0-.562-2.49 40.579 40.579 0 0 0-.482-1.652.216.216 0 0 1 .127-.03z"/></symbol><symbol id="i-pinia" viewBox="0 0 24 24"><path d="M13.277.002c-.079-.01-.193.024-.31.09a2.346 2.346 0 0 0-.415.311c-.301.274-.65.68-.985 1.176-.672.99-1.31 2.356-1.485 3.785-.12.977-.154 1.849-.074 2.578a5.878 5.878 0 0 1 1.956-.338c.922 0 1.804.218 2.618.613.197-.637.34-1.395.445-2.246.175-1.429-.1-2.907-.499-4.028a6.695 6.695 0 0 0-.653-1.378 2.296 2.296 0 0 0-.321-.401c-.097-.092-.199-.153-.277-.162zm-6.81 2.965a.603.603 0 0 0-.288.117l-.013.011a.863.863 0 0 0-.177.327c-.051.15-.094.344-.126.565a8.205 8.205 0 0 0-.044 1.637c.08 1.222.397 2.665 1.079 3.769.093.15.193.296.294.442.726-.776 1.567-1.385 2.488-1.768-.1-.79-.06-1.714.066-2.744.038-.31.1-.616.176-.916a6.45 6.45 0 0 0-1.692-1.08 4.575 4.575 0 0 0-1.29-.366 1.805 1.805 0 0 0-.474.006zm11.751 1.789c-.21.003-.442.022-.687.06a5.974 5.974 0 0 0-2.132.76c-.009.146-.019.291-.036.437-.11.888-.258 1.684-.475 2.364.848.468 1.614 1.13 2.267 1.94.823-.85 1.43-2.05 1.787-3.13.187-.57.304-1.1.35-1.514.022-.207.027-.38.017-.51-.01-.133-.042-.206-.04-.202a.35.35 0 0 0-.114-.072 1.516 1.516 0 0 0-.375-.1 3.42 3.42 0 0 0-.562-.033zm-6.254 3.139c-2.014 0-3.83 1.087-5.147 2.834-1.316 1.748-2.131 4.16-2.131 6.807 0 2.65.806 4.258 2.131 5.218C8.132 23.707 9.96 24 11.964 24c2.004 0 3.831-.293 5.147-1.246 1.326-.96 2.133-2.568 2.133-5.218 0-2.647-.816-5.059-2.133-6.806-1.317-1.748-3.134-2.835-5.147-2.835Zm-3.297 5.209a1.282 1.282 0 0 1 .292 2.518c.115.094.177.201.164.307-.032.265-.521.424-1.09.354-.571-.07-1.007-.342-.974-.607.024-.198.302-.336.678-.364a1.282 1.282 0 0 1 .93-2.208zm6.284.22a1.282 1.282 0 0 1 .726 2.303c.437.058.757.244.757.466 0 .267-.466.483-1.04.483-.574 0-1.04-.216-1.04-.483 0-.098.063-.189.17-.265a1.282 1.282 0 0 1 .427-2.505zm-6.318.215a.822.822 0 1 0 .028 1.645.822.822 0 0 0-.028-1.645zm6.284.22a.822.822 0 1 0 .027 1.644.822.822 0 0 0-.027-1.644zm-6.543.109a.338.338 0 1 1-.023.677.338.338 0 0 1 .023-.677zm6.284.22a.339.339 0 1 1-.018 0h.018zm-3.91 1.179c.17.252.432.404.808.447.372.043.694-.05.976-.28a.145.145 0 1 1 .183.226c-.344.28-.745.394-1.192.343-.445-.051-.79-.24-1.016-.574a.145.145 0 1 1 .24-.162z"/></symbol><symbol id="i-pm2" viewBox="0 0 24 24"><path d="M10.43 3.223c-.83 1.386-.906 1.499-1.21 1.81-.633.654-1.417 1.003-2.415 1.074-.187.013-1.265.033-2.702.05-.638.008-.75.011-.766.028-.01.011-.185.274-.39.586l-.37.565.104.005c.056.003.443-.003.858-.011a93.159 93.163 0 011.335-.019c.572 0 .58 0 .667.03.246.084.393.306.355.533a.504.504 0 01-.394.42c-.104.027-.375.034-2.821.075-.426.007-.78.015-.784.02a30.5 30.5 0 00-.747 1.145c.004.004.405 0 .893-.007 3.13-.051 5.844-.092 6.6-.1.727-.008.995-.02 1.19-.054.54-.092.954-.297 1.31-.65.253-.252.475-.572.852-1.23.125-.217.262-.45.307-.52l.138-.223c.033-.054.07-.11.082-.125.033-.038.1-.146.14-.23.034-.07.534-.906.75-1.257.15-.242.232-.312.42-.355.26-.06.58.102.653.332.06.188.033.305-.136.59-1.21 2.035-1.65 2.764-1.887 3.123-.672 1.018-1.684 1.564-2.991 1.613-.105.003-.773.015-1.486.026l-2.052.031-1.591.027a1166.545 1166.596 0 01-3.102.048c-.502.005-.761.013-.78.022a.723.723 0 00-.12.186 2.87 2.87 0 00-.285.793.427.427 0 01-.039.132c-.024.007-.02.787.003.81a.41.41 0 01.04.135c.057.285.197.616.395.932l.092.147 1.316.008c.724.004 2.597.015 4.164.021 1.692.008 2.914.019 3.01.027.318.026.488.052.75.118a3.374 3.374 0 011.652.95c.255.264.38.44.941 1.339.366.584 1.455 2.363 1.494 2.44.142.28.05.571-.223.7a.588.588 0 01-.518.01c-.145-.072-.152-.08-.9-1.29a85.42 85.42 0 00-.512-.822 26.09 26.091 0 01-.344-.565c-.37-.62-.588-.93-.82-1.162a2.367 2.367 0 00-1.164-.627c-.286-.064-.338-.066-2.328-.077a590.763 590.789 0 00-3.215-.014c-.738 0-1.634-.005-1.99-.008-.517-.008-.647-.007-.647.007 0 .008.156.27.348.578l.348.56.332.003c2.407.019 2.53.02 2.619.037.194.04.309.123.386.28a.35.35 0 01.05.212.43.43 0 01-.143.342.568.568 0 01-.251.142c-.075.022-.142.024-1.214.02-.92-.003-1.134 0-1.126.013.04.072.695 1.125.704 1.135.008.007.592.016 1.508.021 1.23.008 1.527.013 1.673.03 1.105.13 1.942.603 2.573 1.457.117.158.248.366.912 1.44l.466.754h.714c.392 0 .714-.003.714-.007s-.257-.42-.57-.924a493.191 493.213 0 01-1.49-2.407 12.643 12.644 0 00-.274-.43 2.395 2.395 0 00-1.434-.97c-.252-.061-.428-.077-.874-.083-.446-.006-.522-.016-.646-.08a.552.552 0 01-.231-.227c-.033-.065-.037-.088-.037-.211 0-.127.003-.145.037-.208a.557.557 0 01.357-.275c.07-.021.13-.024.52-.024.345 0 .48.005.625.024.937.12 1.64.445 2.224 1.027.276.276.397.443.758 1.042.127.209.412.672.636 1.028l1.05 1.686.644 1.04h.905c.722 0 .905-.005.9-.018a23.922 23.923 0 00-.24-.39c-.46-.737-.493-.796-.513-.943-.027-.206.118-.419.345-.5a.548.548 0 01.6.134c.064.063.414.61.936 1.465l.156.255.178-.009a3.32 3.32 0 001.31-.325c.065-.03.125-.056.134-.059a3.149 3.149 0 001.078-.886 541.326 541.35 0 002.393-3.65c2.484-3.806 2.433-3.724 2.554-4.086a2.682 2.682 0 00-.115-2.016c-.048-.103-.838-1.387-2.263-3.683a536.842 536.866 0 00-2.253-3.617 2.936 2.936 0 00-1.1-.915 3.19 3.191 0 00-.902-.316c-.18-.033-.193-.036-.183-.052.004-.008-.106-.01-.292-.01l-.298.005-.265.44c-.588.98-.643 1.068-.726 1.151a.568.568 0 01-.309.169c-.222.04-.496-.093-.59-.287-.03-.057-.033-.084-.033-.204 0-.187-.009-.167.504-1.01a3.41 3.41 0 00.147-.254c0-.007-.29-.012-.71-.012h-.71l-.019.03a441.636 441.636 0 01-1.829 3.028c-.21.347-.468.776-.57.953-.231.396-.326.54-.49.744a4.123 4.123 0 01-.563.56c-.53.411-1.17.66-1.92.747-.361.042-.884.048-1.072.013a.576.576 0 01-.384-.276c-.033-.065-.037-.083-.037-.21 0-.12.004-.147.034-.21a.542.542 0 01.352-.279c.073-.02.16-.027.515-.037.264-.007.485-.02.578-.033a3.15 3.15 0 00.599-.15c.164-.065.396-.19.532-.288a2.87 2.87 0 00.53-.526c.056-.074.325-.509.599-.966.273-.458.8-1.334 1.171-1.947.37-.614.677-1.124.68-1.135.006-.016-.098-.018-.703-.018h-.708l-.622 1.035zm7.036.536c0 .01.005.02.012.022.005.001.101.149.212.327.506.81.692 1.117.72 1.194.036.1.04.231.008.323a.646.646 0 01-.24.262.543.543 0 01-.657-.088c-.08-.075-.165-.201-.46-.685-.11-.182-.214-.346-.229-.366-.016-.024-.022-.046-.016-.066.01-.031.56-.88.601-.925.027-.03.05-.03.05.003zM16.08 5.896c-.004.007 0 .013.005.016.012.004 1.003 1.593 1.574 2.523.48.778.696 1.127.88 1.413.301.469.413.687.526 1.026.115.342.16.653.147 1.005-.007.24-.03.39-.088.624-.102.4-.325.866-.61 1.278-.09.128-.273.322-.304.322-.01 0-.02.005-.02.012 0 .006-.039.025-.086.04a.633.633 0 01-.39-.012.661.661 0 01-.294-.283c-.032-.067-.034-.087-.029-.19.007-.14.036-.202.231-.503.25-.385.352-.596.424-.885.124-.49.063-.976-.184-1.46-.049-.095-.36-.606-.692-1.138a342.675 342.69 0 01-1.16-1.867c-.308-.496-.569-.918-.584-.938-.014-.021-.024-.045-.02-.054.01-.027.59-.907.62-.938.02-.022.03-.026.043-.016.01.008.015.02.01.026zm3.142.909a.59.59 0 01.26.188c.095.117 1.425 2.23 1.911 3.04.28.462.41.75.5 1.103.062.243.086.431.086.689 0 .343-.037.57-.145.897-.126.382-.217.553-.658 1.236-.16.25-.998 1.548-1.858 2.887l-1.862 2.89c-.163.253-.303.47-.31.485-.008.013-.019.023-.027.02a20.635 20.636 0 01-.625-1.006c0-.009.012-.033.025-.052a8337.117 8337.482 0 013.846-5.967c.205-.318.266-.429.343-.62a1.95 1.95 0 00.15-.84c-.014-.316-.077-.54-.254-.894-.13-.266-.255-.476-.562-.95-.125-.193-.269-.42-.319-.504a76.564 76.567 0 00-.486-.789c-.764-1.226-.755-1.21-.757-1.35 0-.118.04-.212.128-.307a.67.67 0 01.32-.184.633.633 0 01.294.027zm-4.54 1.215l.2.325c1.091 1.747 1.137 1.824 1.247 2.043.461.919.465 1.832.014 2.735-.096.19-.135.255-.767 1.236-.848 1.32-.947 1.47-.974 1.5-.022.022-.025.024-.025.003 0-.012-.533-.881-1.184-1.93a193.219 193.227 0 01-1.184-1.918c0-.007.554-.858 1.233-1.892a612.753 612.78 0 001.314-2.007.706.706 0 01.096-.127c.007 0 .02.014.03.033zm2.437 6.843a.675.675 0 01.277.26.469.469 0 01.041.153c.01.133-.024.21-.264.588a820.264 820.3 0 01-1.25 1.954l-.125.194c-.022.04-.026.042-.048.026a29.746 29.747 0 01-.605-.97c-.012-.03 1.237-1.975 1.327-2.068a.55.55 0 01.446-.182.436.436 0 01.201.045z"/></symbol><symbol id="i-react" viewBox="0 0 24 24"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38-.318-.184-.688-.277-1.092-.278zm-.005 1.09v.006c.225 0 .406.044.558.127.666.382.955 1.835.73 3.704-.054.46-.142.945-.25 1.44-.96-.236-2.006-.417-3.107-.534-.66-.905-1.345-1.727-2.035-2.447 1.592-1.48 3.087-2.292 4.105-2.295zm-9.77.02c1.012 0 2.514.808 4.11 2.28-.686.72-1.37 1.537-2.02 2.442-1.107.117-2.154.298-3.113.538-.112-.49-.195-.964-.254-1.42-.23-1.868.054-3.32.714-3.707.19-.09.4-.127.563-.132zm4.882 3.05c.455.468.91.992 1.36 1.564-.44-.02-.89-.034-1.345-.034-.46 0-.915.01-1.36.034.44-.572.895-1.096 1.345-1.565zM12 8.1c.74 0 1.477.034 2.202.093.406.582.802 1.203 1.183 1.86.372.64.71 1.29 1.018 1.946-.308.655-.646 1.31-1.013 1.95-.38.66-.773 1.288-1.18 1.87-.728.063-1.466.098-2.21.098-.74 0-1.477-.035-2.202-.093-.406-.582-.802-1.204-1.183-1.86-.372-.64-.71-1.29-1.018-1.946.303-.657.646-1.313 1.013-1.954.38-.66.773-1.286 1.18-1.868.728-.064 1.466-.098 2.21-.098zm-3.635.254c-.24.377-.48.763-.704 1.16-.225.39-.435.782-.635 1.174-.265-.656-.49-1.31-.676-1.947.64-.15 1.315-.283 2.015-.386zm7.26 0c.695.103 1.365.23 2.006.387-.18.632-.405 1.282-.66 1.933-.2-.39-.41-.783-.64-1.174-.225-.392-.465-.774-.705-1.146zm3.063.675c.484.15.944.317 1.375.498 1.732.74 2.852 1.708 2.852 2.476-.005.768-1.125 1.74-2.857 2.475-.42.18-.88.342-1.355.493-.28-.958-.646-1.956-1.1-2.98.45-1.017.81-2.01 1.085-2.964zm-13.395.004c.278.96.645 1.957 1.1 2.98-.45 1.017-.812 2.01-1.086 2.964-.484-.15-.944-.318-1.37-.5-1.732-.737-2.852-1.706-2.852-2.474 0-.768 1.12-1.742 2.852-2.476.42-.18.88-.342 1.356-.494zm11.678 4.28c.265.657.49 1.312.676 1.948-.64.157-1.316.29-2.016.39.24-.375.48-.762.705-1.158.225-.39.435-.788.636-1.18zm-9.945.02c.2.392.41.783.64 1.175.23.39.465.772.705 1.143-.695-.102-1.365-.23-2.006-.386.18-.63.406-1.282.66-1.933zM17.92 16.32c.112.493.2.968.254 1.423.23 1.868-.054 3.32-.714 3.708-.147.09-.338.128-.563.128-1.012 0-2.514-.807-4.11-2.28.686-.72 1.37-1.536 2.02-2.44 1.107-.118 2.154-.3 3.113-.54zm-11.83.01c.96.234 2.006.415 3.107.532.66.905 1.345 1.727 2.035 2.446-1.595 1.483-3.092 2.295-4.11 2.295-.22-.005-.406-.05-.553-.132-.666-.38-.955-1.834-.73-3.703.054-.46.142-.944.25-1.438zm4.56.64c.44.02.89.034 1.345.034.46 0 .915-.01 1.36-.034-.44.572-.895 1.095-1.345 1.565-.455-.47-.91-.993-1.36-1.565z"/></symbol><symbol id="i-sequelize" viewBox="0 0 24 24"><path d="M12.0264 0 1.5947 5.9922v12.0156L12.0264 24l10.3789-5.9922V5.9922L12.0264 0zm-.0274 3.4844 7.4297 4.2266v8.5781l-7.4297 4.2266-7.3476-4.1817-.0801-8.623 7.4277-4.2266zm.0489.5898c-.9765.5627-1.9519 1.1274-2.9277 1.6914v.2539l2.6074 1.5234v.4824c.1355-.0781.2616-.1511.4023-.2324l.2559.1504v-.3359c.8844-.5068 1.8073-1.0412 2.5684-1.4805.0035-.1232.0027-.2534.0039-.373-.9703-.5596-1.9403-1.1197-2.9102-1.6797zM8.335 6.1387c-.9705.553-1.9312 1.1228-2.8926 1.6914v3.4023c.965.5553 1.9287 1.1127 2.8926 1.6699l.4023-.2324v-2.916c.8561-.4945 1.7522-1.0126 2.4902-1.4395v-.4843L8.335 6.1387zm7.4433.0879-2.8926 1.6699v.3379l2.6367 1.541v3.0664c.0854.0494.1705.0991.2559.1484l2.8926-1.6699V7.918l-2.8926-1.6914zm-3.6484 2.1445c-.9636.5584-1.9281 1.1151-2.8926 1.6719v3.4238c.965.5553 1.9287 1.1127 2.8926 1.6699l2.8926-1.6719v-3.4023l-2.8926-1.6914zm-6.1973 3.7227c-.1627.0962-.3275.1889-.4902.2852v3.4023c.9643.5571 1.9284 1.1145 2.8926 1.6719l.4023-.2324v-2.918c.1625-.0939.3086-.1787.4727-.2734-.1629-.0945-.3047-.1763-.4727-.2734v-.508l-.4023.2325c-.8251-.4771-1.6902-.976-2.4024-1.3867zm12.2481.0859-2.4023 1.3887c-.088-.0509-.1672-.0972-.2559-.1484v.334l-.4922.2852.4922.2871v3.0664c.0854.0494.1705.0991.2559.1484l2.8926-1.6719v-3.4023l-.4903-.2872zm-8.4688 2.1387c-.1581.0913-.3165.1821-.4746.2734v3.4238c.9637.5575 1.9282 1.1136 2.8926 1.6699l2.8926-1.6699v-3.4023l-.4902-.2871-2.4023 1.3887c-.8307-.4804-1.7013-.9829-2.4181-1.3965z"/></symbol><symbol id="i-springboot" viewBox="0 0 24 24"><path d="m23.693 10.7058-4.73-8.1844c-.4094-.7106-1.4166-1.2942-2.2402-1.2942H7.2725c-.819 0-1.8308.5836-2.2402 1.2942L.307 10.7058c-.4095.7106-.4095 1.873 0 2.5837l4.7252 8.189c.4094.7107 1.4166 1.2943 2.2402 1.2943h9.455c.819 0 1.826-.5836 2.2402-1.2942l4.7252-8.189c.4095-.7107.4095-1.8732 0-2.5838zM10.9763 5.7547c0-.5365.4377-.9742.9742-.9742s.9742.4377.9742.9742v5.8217c0 .5366-.4377.9742-.9742.9742s-.9742-.4376-.9742-.9742zm.9742 12.4294c-3.6427 0-6.6077-2.965-6.6077-6.6077.0047-2.0896.993-4.0521 2.6685-5.304a.8657.8657 0 0 1 1.2142.1788.8657.8657 0 0 1-.1788 1.2143c-2.1602 1.6048-2.612 4.6592-1.0072 6.8194 1.6049 2.1603 4.6593 2.612 6.8195 1.0072 1.2378-.9177 1.9673-2.372 1.9673-3.9157a4.8972 4.8972 0 0 0-1.9861-3.925c-.386-.2824-.466-.8284-.1836-1.2143.2824-.386.8283-.466 1.2143-.1835 1.6895 1.2471 2.6826 3.2238 2.6873 5.3228 0 3.6474-2.965 6.6077-6.6077 6.6077z"/></symbol><symbol id="i-typescript" viewBox="0 0 24 24"><path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-.643-.361 5.093 5.093 0 0 0-.717-.26 5.453 5.453 0 0 0-1.426-.2c-.3 0-.573.028-.819.086a2.1 2.1 0 0 0-.623.242c-.17.104-.3.229-.393.374a.888.888 0 0 0-.14.49c0 .196.053.373.156.529.104.156.252.304.443.444s.423.276.696.41c.273.135.582.274.926.416.47.197.892.407 1.266.628.374.222.695.473.963.753.268.279.472.598.614.957.142.359.214.776.214 1.253 0 .657-.125 1.21-.373 1.656a3.033 3.033 0 0 1-1.012 1.085 4.38 4.38 0 0 1-1.487.596c-.566.12-1.163.18-1.79.18a9.916 9.916 0 0 1-1.84-.164 5.544 5.544 0 0 1-1.512-.493v-2.63a5.033 5.033 0 0 0 3.237 1.2c.333 0 .624-.03.872-.09.249-.06.456-.144.623-.25.166-.108.29-.234.373-.38a1.023 1.023 0 0 0-.074-1.089 2.12 2.12 0 0 0-.537-.5 5.597 5.597 0 0 0-.807-.444 27.72 27.72 0 0 0-1.007-.436c-.918-.383-1.602-.852-2.053-1.405-.45-.553-.676-1.222-.676-2.005 0-.614.123-1.141.369-1.582.246-.441.58-.804 1.004-1.089a4.494 4.494 0 0 1 1.47-.629 7.536 7.536 0 0 1 1.77-.201zm-15.113.188h9.563v2.166H9.506v9.646H6.789v-9.646H3.375z"/></symbol><symbol id="i-vitest" viewBox="0 0 24 24"><path d="M11.545 23.3a.613.613 0 0 1-.895.197L.252 15.936A.61.61 0 0 1 0 15.439V6.325c0-.502.569-.792.975-.497l6.358 4.624c.594.433 1.432.25 1.793-.39L14.393.7a.62.62 0 0 1 .535-.314h8.455a.613.613 0 0 1 .537.916z"/></symbol><symbol id="i-vuedotjs" viewBox="0 0 24 24"><path d="M24,1.61H14.06L12,5.16,9.94,1.61H0L12,22.39ZM12,14.08,5.16,2.23H9.59L12,6.41l2.41-4.18h4.43Z"/></symbol><symbol id="i-vuetify" viewBox="0 0 24 24"><path d="M6.312 12.564 12.636 1.2H0l6.312 11.364ZM14.94 1.2 7.464 14.64 12 22.8 24 1.2h-9.06Zm4.98 2.4L12 17.856l-1.788-3.216L16.344 3.6h3.576ZM6.312 7.62 4.08 3.6h4.476L6.312 7.62Z"/></symbol></svg>
 
 <header class="top">
   <div class="wrap">
-    <a class="mark" href="#">fran<b>.</b>patejim</a>
+    <a class="mark" href="#">francisco<b>.</b>patejim</a>
     <nav>
-      <a class="sec" href="#binfo"><span data-l="en">Case study</span><span data-l="es">Caso</span></a>
-      <a class="sec" href="#arquitectura"><span data-l="en">Architecture</span><span data-l="es">Arquitectura</span></a>
-      <a class="sec" href="#como-trabajo"><span data-l="en">How I work</span><span data-l="es">Cómo trabajo</span></a>
-      <a class="sec" href="#contacto"><span data-l="en">Contact</span><span data-l="es">Contacto</span></a>
-      <div class="toggles">
-        <button class="tg" id="tg-lang" type="button" aria-label="Cambiar idioma / Switch language"><span data-l="en">ES</span><span data-l="es">EN</span></button>
-        <button class="tg" id="tg-theme" type="button" aria-label="Light / dark">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        </button>
-      </div>
+      <a href="#binfo"><span data-l="en">BInfo</span><span data-l="es">BInfo</span></a>
+      <a href="#arquitectura"><span data-l="en">Architecture</span><span data-l="es">Arquitectura</span></a>
+      <a href="#proceso"><span data-l="en">Process</span><span data-l="es">Proceso</span></a>
+      <a href="#trabajos"><span data-l="en">Work</span><span data-l="es">Trabajos</span></a>
+      <button class="tg" id="tg-lang" type="button" aria-label="Cambiar idioma / Switch language"><span data-l="en">ES</span><span data-l="es">EN</span></button>
+      <button class="tg" id="tg-theme" type="button" aria-label="Light / dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
     </nav>
   </div>
 </header>
 
 <div class="hero">
   <div class="wrap">
-    <div>
-      <span class="status"><i></i><span data-l="en">Open to work · Buenos Aires · remote or hybrid</span><span data-l="es">Disponible · Buenos Aires · remoto o híbrido</span></span>
-      <h1>Francisco<span>Ian Patejim</span></h1>
-      <p class="lead" data-l="en">Full-stack developer. For the past year I've built and run, <strong>on my own</strong>, the system a 17-person investigations firm uses every day: <strong>Vue, Node, MySQL, LLMs and a Linux server in production.</strong></p>
-      <p class="lead" data-l="es">Desarrollador full-stack. Hace un año construyo y mantengo, <strong>solo</strong>, el sistema que usa todos los días un estudio de 17 personas: <strong>Vue, Node, MySQL, LLMs y un servidor Linux en producción.</strong></p>
-      <div class="ctas">
-        <a class="btn primary" href="#binfo"><span data-l="en">See the case study</span><span data-l="es">Ver el caso</span> ↓</a>
-        <a class="btn" data-l="en" href="cv/CV-Francisco-Patejim-EN.pdf">Resume (PDF)</a>
-        <a class="btn" data-l="es" href="cv/CV-Francisco-Patejim-ES.pdf">CV (PDF)</a>
+    <div class="avail"><i></i><span data-l="en">Open to work · Buenos Aires · remote or hybrid</span><span data-l="es">Buscando trabajo · Buenos Aires · remoto o híbrido</span></div>
+    <h1>Francisco <span class="r2">Ian Patejim<i>.</i></span></h1>
+    <div class="hero-grid">
+      <div>
+        <p class="lead" data-l="en">Full-stack developer. For the past year I've built and run, on my own, <em>the system a firm of 17 people works in every day</em>: Vue, Node, MySQL, LLMs and a Linux server in production. At university, Java and Spring Boot.</p>
+        <p class="lead" data-l="es">Desarrollador full-stack. Hace un año construyo y mantengo, solo, <em>el sistema en el que trabaja todos los días un estudio de 17 personas</em>: Vue, Node, MySQL, LLMs y un servidor Linux en producción. En la facultad, Java y Spring Boot.</p>
+        <div class="ctas">
+          <a class="btn hot" href="#binfo"><span data-l="en">See the system</span><span data-l="es">Ver el sistema</span> ↓</a>
+          <a class="btn ghost" data-l="en" href="cv/CV-Francisco-Patejim-EN.pdf">Resume (PDF)</a>
+          <a class="btn ghost" data-l="es" href="cv/CV-Francisco-Patejim-ES.pdf">CV (PDF)</a>
+        </div>
       </div>
-      <div class="small-links">
-        <a href="https://github.com/FranPate">GitHub</a>
-        <a href="https://www.linkedin.com/in/francisco-ian-patejim">LinkedIn</a>
-        <a href="mailto:jimpate0@gmail.com">jimpate0@gmail.com</a>
+      <div class="term" aria-label="Terminal">
+        <div class="bar"><i></i><i></i><i></i><span>~/binfo</span></div>
+<pre data-l="en"><span class="ln" style="animation-delay:.3s"><span class="p">$</span> binfo status</span><span class="ln" style="animation-delay:.7s"><span class="k">running   </span> production · Linux VPS · nginx · pm2</span><span class="ln" style="animation-delay:.9s"><span class="k">users     </span> 17 people · 4 roles with permissions</span><span class="ln" style="animation-delay:1.1s"><span class="k">talks to  </span> Gmail · Drive · Maps · LLM · insurer portal</span><span class="ln" style="animation-delay:1.3s"><span class="k">security  </span> 2FA · revocable JWT · login audit</span><span class="ln" style="animation-delay:1.8s"><span class="p">$</span> npm test</span><span class="ln" style="animation-delay:2.3s"> <span class="p">✓</span> 4,685 passing <span class="d">(backend + frontend)</span></span><span class="ln" style="animation-delay:2.7s"><span class="p">$</span> <span class="caret"></span></span></pre>
+<pre data-l="es"><span class="ln" style="animation-delay:.3s"><span class="p">$</span> binfo status</span><span class="ln" style="animation-delay:.7s"><span class="k">corre en  </span> producción · VPS Linux · nginx · pm2</span><span class="ln" style="animation-delay:.9s"><span class="k">usuarios  </span> 17 personas · 4 roles con permisos</span><span class="ln" style="animation-delay:1.1s"><span class="k">habla con </span> Gmail · Drive · Maps · LLM · portal de la ART</span><span class="ln" style="animation-delay:1.3s"><span class="k">seguridad </span> 2FA · JWT revocable · auditoría de ingresos</span><span class="ln" style="animation-delay:1.8s"><span class="p">$</span> npm test</span><span class="ln" style="animation-delay:2.3s"> <span class="p">✓</span> 4.685 en verde <span class="d">(backend + frontend)</span></span><span class="ln" style="animation-delay:2.7s"><span class="p">$</span> <span class="caret"></span></span></pre>
       </div>
-    </div>
-
-    <div class="term" aria-label="Terminal">
-      <div class="bar"><i></i><i></i><i></i><span>~/binfo — main</span></div>
-<pre><span class="ln" style="animation-delay:.2s"><span class="p">$</span> git log --oneline | wc -l</span>
-<span class="ln" style="animation-delay:.5s">1424</span>
-<span class="ln" style="animation-delay:.9s"><span class="p">$</span> npm test</span>
-<span class="ln" style="animation-delay:1.3s"> <span class="ok">✓</span> backend   3586 tests  <span class="d">146 files</span></span>
-<span class="ln" style="animation-delay:1.5s"> <span class="ok">✓</span> frontend  1099 tests  <span class="d">67 files</span></span>
-<span class="ln" style="animation-delay:1.9s"><span class="p">$</span> ls templates/**/*.docx | wc -l</span>
-<span class="ln" style="animation-delay:2.2s">29</span>
-<span class="ln" style="animation-delay:2.6s"><span class="d"># in production since 2026 · 17 daily users</span></span></pre>
     </div>
   </div>
 </div>
+
+<div class="band" aria-hidden="true"><div class="track" id="track"></div></div>
 
 <main>
 
   <section id="binfo">
     <div class="wrap">
-      <p class="kicker">01 — <span data-l="en">Case study · Dec 2025 – present</span><span data-l="es">Caso · dic 2025 – hoy</span></p>
-      <h2 data-l="en">BInfo: from an insurer's email to a finished investigation report.</h2>
-      <h2 data-l="es">BInfo: del mail de la aseguradora al informe de investigación terminado.</h2>
-      <p class="intro" data-l="en">Estudio HDB investigates workplace-accident claims for insurance companies (ARTs) in Argentina. Each case used to be assembled by hand: read the assignment email, interview the worker and the employer, write a Word report. BInfo now carries a case from the moment the insurer's email arrives until a supervisor approves the final report.</p>
-      <p class="intro" data-l="es">Estudio HDB investiga siniestros laborales para aseguradoras de riesgos del trabajo (ART). Cada caso se armaba a mano: leer el mail de asignación, entrevistar al trabajador y a la empresa, escribir un informe en Word. BInfo lleva hoy el caso desde que llega el mail de la ART hasta que un supervisor aprueba el informe final.</p>
+      <p class="kicker"><b>01</b><span data-l="en">The system · Dec 2025 – today</span><span data-l="es">El sistema · dic 2025 – hoy</span></p>
+      <h2>BInfo<span class="o">.</span></h2>
+      <p class="intro" data-l="en">Estudio HDB investigates workplace-accident claims for insurance companies (ARTs) in Argentina. Each case used to be assembled by hand: read the assignment email, interview the worker and the employer, write a Word report. <strong>BInfo carries the case from the moment the insurer's email arrives until a supervisor approves the final report.</strong></p>
+      <p class="intro" data-l="es">Estudio HDB investiga siniestros laborales para aseguradoras de riesgos del trabajo (ART). Cada caso se armaba a mano: leer el mail de asignación, entrevistar al trabajador y a la empresa, escribir un informe en Word. <strong>BInfo lleva el caso desde que llega el mail de la ART hasta que un supervisor aprueba el informe final.</strong></p>
+      <div class="private">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <span data-l="en">The code is private: it belongs to the firm and handles health and personal data, so there's no public repo or live demo. The screenshots come from an anonymized copy, and I'm happy to walk through the code in an interview.</span>
+        <span data-l="es">El código es privado: es del estudio y maneja datos de salud y personales, así que no hay repo público ni demo en vivo. Las capturas salen de una copia anonimizada, y el código lo muestro con gusto en una entrevista.</span>
+      </div>
 
-      <div class="numbers">
-        <div><b>17</b><span data-l="en">people use it every day</span><span data-l="es">personas lo usan a diario</span></div>
-        <div><b data-l="en">3,700+</b><b data-l="es">3.700+</b><span data-l="en">claims handled in 2026</span><span data-l="es">siniestros gestionados en 2026</span></div>
-        <div><b>~4,700</b><span data-l="en">automated tests</span><span data-l="es">tests automatizados</span></div>
-        <div><b>1</b><span data-l="en">developer: me, end to end</span><span data-l="es">desarrollador: yo, de punta a punta</span></div>
+      <div class="facts">
+        <div><h3 data-l="en">Email → case</h3><h3 data-l="es">Mail → caso</h3><p data-l="en">A poller reads the insurers' emails and PDFs and creates the case, deduplicating forwarded copies.</p><p data-l="es">Un poller lee los mails y PDFs de las ART y crea el caso, descartando los reenvíos duplicados.</p></div>
+        <div><h3 data-l="en">Interview → data</h3><h3 data-l="es">Entrevista → datos</h3><p data-l="en">An LLM structures the interviews and an assistant flags missing data and contradictions between them.</p><p data-l="es">Un LLM estructura las entrevistas y un asistente marca datos faltantes y contradicciones entre ellas.</p></div>
+        <div><h3 data-l="en">Data → report</h3><h3 data-l="es">Datos → informe</h3><p data-l="en">The report is edited online with versions and reviewer comments, then rendered to Word and delivered.</p><p data-l="es">El informe se edita online con versiones y comentarios del revisor, y sale en Word hacia la ART.</p></div>
       </div>
 
       <div class="gallery">
         <div class="tabs" role="tablist">
-          <button role="tab" aria-selected="true" data-shot="0"><span data-l="en">Dashboard</span><span data-l="es">Dashboard</span></button>
-          <button role="tab" aria-selected="false" data-shot="1"><span data-l="en">Case detail</span><span data-l="es">Detalle del caso</span></button>
-          <button role="tab" aria-selected="false" data-shot="2"><span data-l="en">Assignment</span><span data-l="es">Asignación</span></button>
+          <button role="tab" aria-selected="true" data-shot="0"><span data-l="en">Dashboard</span><span data-l="es">Dashboard</span><small data-l="en">investigator</small><small data-l="es">investigador</small></button>
+          <button role="tab" aria-selected="false" data-shot="1"><span data-l="en">Interview</span><span data-l="es">Entrevista</span><small data-l="en">builder</small><small data-l="es">armador</small></button>
+          <button role="tab" aria-selected="false" data-shot="2"><span data-l="en">Case detail</span><span data-l="es">Detalle del caso</span><small data-l="en">investigator</small><small data-l="es">investigador</small></button>
+          <button role="tab" aria-selected="false" data-shot="3"><span data-l="en">Assignment</span><span data-l="es">Asignación</span><small data-l="en">supervisor</small><small data-l="es">supervisor</small></button>
         </div>
-        <div class="browser">
-          <div class="bar"><i></i><i></i><i></i><span class="url"><span data-l="en">binfo · staging — anonymized data</span><span data-l="es">binfo · staging — datos anonimizados</span></span></div>
-          <div class="view">
-            <img src="img/dashboard.jpg" alt="BInfo dashboard: an investigator's active cases with deadlines and interview status" width="1568" height="495">
-            <img src="img/detalle.jpg" alt="Case detail: claim data, interview status and actions" width="1568" height="376" hidden>
-            <img src="img/asignacion.jpg" alt="Assignment queue with a suggested investigator" width="1568" height="148" hidden>
+        <div>
+          <div class="screen">
+            <div class="bar"><i></i><i></i><i></i><span><span data-l="en">binfo · staging — anonymized data</span><span data-l="es">binfo · staging — datos anonimizados</span></span></div>
+            <img src="img/dashboard.jpg" alt="BInfo dashboard" width="1568" height="495">
+            <img src="img/entrevista.jpg" alt="Interview builder" width="1568" height="980" hidden loading="lazy">
+            <img src="img/detalle.jpg" alt="Case detail" width="1568" height="376" hidden loading="lazy">
+            <img src="img/asignacion.jpg" alt="Assignment queue" width="1568" height="148" hidden loading="lazy">
           </div>
+          <p class="cap" id="cap"></p>
         </div>
-        <p class="cap" id="cap"></p>
       </div>
     </div>
   </section>
 
-  <section id="arquitectura" class="arch-sec">
+  <section id="arquitectura" class="dark">
     <div class="wrap">
-      <p class="kicker">02 — <span data-l="en">Architecture</span><span data-l="es">Arquitectura</span></p>
-      <h2 data-l="en">One server, a handful of moving parts, each one there for a reason.</h2>
-      <h2 data-l="es">Un servidor, pocas piezas, cada una por una razón.</h2>
-
+      <p class="kicker"><b>02</b><span data-l="en">Architecture</span><span data-l="es">Arquitectura</span></p>
+      <h2 data-l="en">One server.<br><span class="o">Few parts.</span></h2>
+      <h2 data-l="es">Un servidor.<br><span class="o">Pocas piezas.</span></h2>
       <div class="arch">
         <div class="svgbox"><svg viewBox="0 0 660 420" role="img" aria-label="Architecture diagram">
           <rect class="boundary" x="210" y="8" width="442" height="404" rx="14"/>
           <text class="blabel" x="226" y="402">Linux VPS · nginx · pm2</text>
-
-          <!-- aristas -->
           <g id="edges">
             <path class="edge" data-e="mail poller" d="M170 62 H 240"/>
             <path class="edge" data-e="poller api" d="M320 90 V 168"/>
@@ -326,18 +378,16 @@
             <path class="edge" data-e="replies api" d="M170 330 C 205 330 210 210 240 210"/>
           </g>
           <g id="flows"></g>
-
-          <g class="node" tabindex="0" data-n="mail" transform="translate(10,34)"><rect width="160" height="56" rx="9"/><text x="14" y="25">Insurer emails</text><text class="sub" x="14" y="43">assignment + PDFs</text></g>
-          <g class="node" tabindex="0" data-n="poller" transform="translate(240,34)"><rect width="160" height="56" rx="9"/><text x="14" y="25">Mail poller</text><text class="sub" x="14" y="43">Gmail API · parser</text></g>
-          <g class="node" tabindex="0" data-n="llm" transform="translate(470,34)"><rect width="170" height="56" rx="9"/><text x="14" y="25">n8n + LLM</text><text class="sub" x="14" y="43">interviews · assistant</text></g>
-          <g class="node" tabindex="0" data-n="app" transform="translate(10,168)"><rect width="160" height="56" rx="9"/><text x="14" y="25">Vue 3 app</text><text class="sub" x="14" y="43">Pinia · Vuetify · PWA</text></g>
-          <g class="node" tabindex="0" data-n="api" transform="translate(240,168)"><rect width="160" height="56" rx="9"/><text x="14" y="25">Express API</text><text class="sub" x="14" y="43">JWT · SSE · 2FA</text></g>
-          <g class="node" tabindex="0" data-n="db" transform="translate(470,168)"><rect width="170" height="56" rx="9"/><text x="14" y="25">MySQL</text><text class="sub" x="14" y="43">Sequelize</text></g>
-          <g class="node" tabindex="0" data-n="replies" transform="translate(10,302)"><rect width="160" height="56" rx="9"/><text x="14" y="25">Company replies</text><text class="sub" x="14" y="43">Gmail + IMAP</text></g>
-          <g class="node" tabindex="0" data-n="word" transform="translate(240,302)"><rect width="160" height="56" rx="9"/><text x="14" y="25">Report engine</text><text class="sub" x="14" y="43">docxtemplater · 29</text></g>
-          <g class="node" tabindex="0" data-n="out" transform="translate(470,302)"><rect width="170" height="56" rx="9"/><text x="14" y="25">Drive + insurer portal</text><text class="sub" x="14" y="43">delivery</text></g>
+          <g class="node" tabindex="0" data-n="mail" transform="translate(10,34)"><rect width="160" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">assignment + PDFs</text></g>
+          <g class="node" tabindex="0" data-n="poller" transform="translate(240,34)"><rect width="160" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">Gmail API · parser</text></g>
+          <g class="node" tabindex="0" data-n="llm" transform="translate(470,34)"><rect width="170" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">interviews · assistant</text></g>
+          <g class="node" tabindex="0" data-n="app" transform="translate(10,168)"><rect width="160" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">Pinia · Vuetify · PWA</text></g>
+          <g class="node" tabindex="0" data-n="api" transform="translate(240,168)"><rect width="160" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">JWT · SSE · 2FA</text></g>
+          <g class="node" tabindex="0" data-n="db" transform="translate(470,168)"><rect width="170" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">Sequelize</text></g>
+          <g class="node" tabindex="0" data-n="replies" transform="translate(10,302)"><rect width="160" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">Gmail + IMAP</text></g>
+          <g class="node" tabindex="0" data-n="word" transform="translate(240,302)"><rect width="160" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">docxtemplater</text></g>
+          <g class="node" tabindex="0" data-n="out" transform="translate(470,302)"><rect width="170" height="56" rx="9"/><text x="14" y="25"></text><text class="sub" x="14" y="43">Google Drive · portal</text></g>
         </svg></div>
-
         <div class="detail" aria-live="polite">
           <div class="tag" id="d-tag"></div>
           <h3 id="d-title"></h3>
@@ -349,210 +399,254 @@
     </div>
   </section>
 
-  <section id="decisiones">
+  <section id="problemas">
     <div class="wrap">
-      <p class="kicker">03 — <span data-l="en">Decisions I can defend</span><span data-l="es">Decisiones que puedo defender</span></p>
-      <h2 data-l="en">The interesting part isn't the stack. It's what breaks.</h2>
-      <h2 data-l="es">Lo interesante no es el stack. Es lo que se rompe.</h2>
-
-      <div class="decisions">
-        <div class="dec reveal">
-          <div class="n">/01</div>
-          <h3 data-l="en">Never trust an LLM quote</h3><h3 data-l="es">No confiar en una cita del LLM</h3>
-          <p data-l="en">The model backs each suggestion with quotes from the interviews. Before showing them, the backend checks that every quote actually exists in the source text; one that doesn't is downgraded instead of being displayed as evidence.</p>
-          <p data-l="es">El modelo respalda cada sugerencia con citas de las entrevistas. Antes de mostrarlas, el backend verifica que cada cita exista de verdad en el texto; la que no aparece se degrada en vez de mostrarse como evidencia.</p>
-        </div>
-        <div class="dec reveal">
-          <div class="n">/02</div>
-          <h3 data-l="en">Templates that can't break silently</h3><h3 data-l="es">Plantillas que no se rompen en silencio</h3>
-          <p data-l="en">Word splits text into "runs" when you save, which can cut a template tag in half. That used to surface only when an investigator couldn't generate a report. The suite now compiles all 29 templates and checks their required tags, so a broken one fails in seconds, before deploy.</p>
-          <p data-l="es">Word parte el texto en "runs" al guardar, y eso puede cortar un tag de la plantilla a la mitad. Antes se descubría cuando un investigador no podía generar su informe. Ahora los tests compilan las 29 plantillas y revisan sus tags: una rota falla en segundos, antes del deploy.</p>
-        </div>
-        <div class="dec reveal">
-          <div class="n">/03</div>
-          <h3 data-l="en">Staging that can't touch the real world</h3><h3 data-l="es">Un staging que no puede tocar el mundo real</h3>
-          <p data-l="en">The test environment runs on an anonymized copy of production, with a test mode that blocks email, the insurer's portal and the LLM. The safety lives in configuration, not in remembering not to click the wrong button.</p>
-          <p data-l="es">El entorno de prueba corre sobre una copia anonimizada de producción, con un modo de prueba que bloquea mails, el portal de la ART y el LLM. La seguridad está en la configuración, no en acordarse de no tocar el botón equivocado.</p>
-        </div>
-        <div class="dec reveal">
-          <div class="n">/04</div>
-          <h3 data-l="en">Respect the other side's limits</h3><h3 data-l="es">Respetar los límites del otro lado</h3>
-          <p data-l="en">Reading company replies once exhausted the per-user Gmail quota and delayed real emails. The poller now caps reads per cycle, remembers what it already read, and only advances its window when a cycle completes.</p>
-          <p data-l="es">Leer las respuestas de las empresas llegó a agotar la cuota de Gmail por usuario y demoró mails reales. Ahora el poller tiene un tope de lecturas por ciclo, recuerda lo ya leído y solo avanza su ventana cuando el ciclo termina completo.</p>
-        </div>
-        <div class="dec reveal">
-          <div class="n">/05</div>
-          <h3 data-l="en">Security for a small team</h3><h3 data-l="es">Seguridad para un equipo chico</h3>
-          <p data-l="en">JWT sessions with per-user revocation, two-factor login by email, login auditing with alerts on suspicious attempts, and OAuth tokens encrypted at rest.</p>
-          <p data-l="es">Sesiones JWT revocables por usuario, login en dos pasos por mail, registro de ingresos con avisos ante intentos sospechosos y tokens OAuth cifrados en la base.</p>
-        </div>
+      <p class="kicker"><b>03</b><span data-l="en">Problems I solved</span><span data-l="es">Problemas que resolví</span></p>
+      <h2 data-l="en">What broke,<br><span class="o">and the fix.</span></h2>
+      <h2 data-l="es">Qué se rompía<br><span class="o">y cómo lo arreglé.</span></h2>
+      <div class="probs">
+        <article class="prob tilt">
+          <span class="tagp">LLM · backend</span>
+          <h3 data-l="en">The model invented quotes</h3><h3 data-l="es">El modelo inventaba citas</h3>
+          <p class="q" data-l="en"><b>problem</b>The assistant backs each suggestion with quotes from the interviews, and sometimes the quote didn't exist.</p>
+          <p class="q" data-l="es"><b>problema</b>El asistente respalda cada sugerencia con citas de las entrevistas, y a veces la cita no existía.</p>
+          <p class="a" data-l="en"><b>fix</b>The backend checks every quote against the source text before showing it; one that isn't there is downgraded instead of displayed as evidence.</p>
+          <p class="a" data-l="es"><b>solución</b>El backend busca cada cita en el texto original antes de mostrarla; la que no aparece se degrada en vez de mostrarse como evidencia.</p>
+        </article>
+        <article class="prob tilt">
+          <span class="tagp">Gmail API · jobs</span>
+          <h3 data-l="en">Running out of Gmail quota</h3><h3 data-l="es">Se agotaba la cuota de Gmail</h3>
+          <p class="q" data-l="en"><b>problem</b>Reading company replies exhausted the per-user quota and delayed real emails.</p>
+          <p class="q" data-l="es"><b>problema</b>Leer las respuestas de las empresas agotaba la cuota por usuario y demoraba mails reales.</p>
+          <p class="a" data-l="en"><b>fix</b>A cap on reads per cycle, memory of what was already read, and a window that only advances when a cycle completes.</p>
+          <p class="a" data-l="es"><b>solución</b>Un tope de lecturas por ciclo, memoria de lo ya leído y una ventana que solo avanza cuando el ciclo termina completo.</p>
+        </article>
+        <article class="prob tilt">
+          <span class="tagp">Word · tests</span>
+          <h3 data-l="en">Reports that failed on Tuesday</h3><h3 data-l="es">Informes que fallaban el martes</h3>
+          <p class="q" data-l="en"><b>problem</b>Saving a template in Word can split a tag in two, and nobody noticed until an investigator couldn't generate a report.</p>
+          <p class="q" data-l="es"><b>problema</b>Guardar una plantilla en Word puede partir un tag en dos, y nadie se enteraba hasta que un investigador no podía generar su informe.</p>
+          <p class="a" data-l="en"><b>fix</b>The test suite compiles every template and checks its tags, so a broken one fails in seconds, before deploy.</p>
+          <p class="a" data-l="es"><b>solución</b>Los tests compilan cada plantilla y revisan sus tags: una rota falla en segundos, antes del deploy.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section id="como-trabajo" class="how">
+  <section id="proceso" class="dark">
     <div class="wrap">
-      <p class="kicker">04 — <span data-l="en">How I work</span><span data-l="es">Cómo trabajo</span></p>
-      <h2 data-l="en">Small changes, shipped often, to people I talk to every day.</h2>
-      <h2 data-l="es">Cambios chicos, seguido, para gente con la que hablo todos los días.</h2>
-      <p class="intro" data-l="en">I get requests straight from the people who use the system, and I ship often. The process exists to make that safe, not slow.</p>
-      <p class="intro" data-l="es">Los pedidos me llegan directo de la gente que usa el sistema, y subo cambios seguido. El proceso está para que eso sea seguro, no lento.</p>
-
+      <p class="kicker"><b>04</b><span data-l="en">How I work</span><span data-l="es">Cómo trabajo</span></p>
+      <h2 data-l="en">A safe process,<br><span class="o">not a slow one.</span></h2>
+      <h2 data-l="es">Un proceso seguro,<br><span class="o">no lento.</span></h2>
       <div class="steps">
-        <div><span class="mono">01</span><h3 data-l="en">Plan first</h3><h3 data-l="es">Plan primero</h3><p data-l="en">Which files change and why, agreed before writing code.</p><p data-l="es">Qué archivos cambian y por qué, acordado antes de escribir código.</p></div>
-        <div><span class="mono">02</span><h3 data-l="en">One problem per change</h3><h3 data-l="es">Un problema por cambio</h3><p data-l="en">1,424 commits in a year, most of them small enough to revert alone.</p><p data-l="es">1.424 commits en un año, casi todos lo bastante chicos para revertirse solos.</p></div>
-        <div><span class="mono">03</span><h3 data-l="en">Test the logic</h3><h3 data-l="es">Testear la lógica</h3><p data-l="en">Business rules live in pure functions with Vitest coverage.</p><p data-l="es">Las reglas de negocio viven en funciones puras, cubiertas con Vitest.</p></div>
-        <div><span class="mono">04</span><h3 data-l="en">Try it in staging</h3><h3 data-l="es">Probar en staging</h3><p data-l="en">Anonymized data, outbound actions blocked.</p><p data-l="es">Datos anonimizados, envíos al exterior bloqueados.</p></div>
-        <div><span class="mono">05</span><h3 data-l="en">Deploy & document</h3><h3 data-l="es">Deploy y documentar</h3><p data-l="en">git pull + pm2 on the VPS; what wasn't verified gets written down as unverified.</p><p data-l="es">git pull + pm2 en el VPS; lo que no se verificó queda escrito como no verificado.</p></div>
-      </div>
-
-      <ul class="stack" aria-label="Stack">
-        <li>Vue 3</li><li>Pinia</li><li>Vuetify</li><li>Node.js</li><li>Express</li><li>MySQL</li><li>Sequelize</li>
-        <li>n8n</li><li>LLM APIs</li><li>Google APIs</li><li>Server-Sent Events</li><li>docxtemplater</li>
-        <li>pdf-lib</li><li>Vitest</li><li>Linux</li><li>nginx</li><li>pm2</li><li>Git</li>
-      </ul>
-    </div>
-  </section>
-
-  <section id="otros">
-    <div class="wrap other">
-      <div>
-        <p class="kicker">05 — <span data-l="en">Other work</span><span data-l="es">Otros trabajos</span></p>
-        <h2 data-l="en">Smaller things</h2><h2 data-l="es">Cosas más chicas</h2>
-      </div>
-      <ol>
-        <li><a href="https://estudiohdb.com/previa"><strong data-l="en">Estudio HDB landing</strong><strong data-l="es">Landing de Estudio HDB</strong><span class="arrow">↗</span><span class="d" data-l="en">The firm's public site, built with Astro.</span><span class="d" data-l="es">El sitio público del estudio, hecho con Astro.</span></a></li>
-        <li><a href="https://github.com/aizarassefh/sist-dist-tp-grupo-a"><strong>Museo Virtual</strong><span class="arrow">↗</span><span class="d" data-l="en">University team project (distributed systems): Git branches and code review in a group.</span><span class="d" data-l="es">Proyecto en equipo de la facultad (sistemas distribuidos): ramas de Git y code review en grupo.</span></a></li>
-      </ol>
-    </div>
-  </section>
-
-  <section id="contacto" class="contact">
-    <div class="wrap">
-      <p class="kicker">06 — <span data-l="en">Contact</span><span data-l="es">Contacto</span></p>
-      <h2 data-l="en">Let's talk.</h2><h2 data-l="es">Hablemos.</h2>
-      <a class="mail" href="mailto:jimpate0@gmail.com">jimpate0@gmail.com</a>
-      <p class="intro" style="margin-top:18px" data-l="en">BInfo's code is private (it belongs to the firm and handles health and personal data), so there's no public repo or live demo. I'm happy to walk through the architecture and the code in an interview.</p>
-      <p class="intro" style="margin-top:18px" data-l="es">El código de BInfo es privado (es del estudio y maneja datos de salud y personales), así que no hay repo público ni demo en vivo. Lo muestro con gusto en una entrevista.</p>
-      <div class="foot">
-        <span data-l="en">Analista Programador Universitario (UNLa) · B.Sc. in Information Systems in progress · English: advanced</span>
-        <span data-l="es">Analista Programador Universitario (UNLa) · Licenciatura en Sistemas en curso · Inglés avanzado</span>
-        <div>
-          <a href="https://github.com/FranPate">GitHub</a>
-          <a href="https://www.linkedin.com/in/francisco-ian-patejim">LinkedIn</a>
-          <a data-l="en" href="cv/CV-Francisco-Patejim-EN.pdf">Resume</a>
-          <a data-l="es" href="cv/CV-Francisco-Patejim-ES.pdf">CV</a>
+        <div><span class="n">01</span><h3 data-l="en">Plan</h3><h3 data-l="es">Plan</h3></div>
+        <div><span class="n">02</span><h3 data-l="en">Build</h3><h3 data-l="es">Desarrollo</h3></div>
+        <div><span class="n">03</span><h3 data-l="en">Test the logic</h3><h3 data-l="es">Tests de la lógica</h3></div>
+        <div class="star"><span class="n">04</span><h3>Staging</h3>
+          <p data-l="en">An anonymized copy of production where the outside world is switched off by configuration:</p>
+          <p data-l="es">Una copia anonimizada de producción donde el mundo exterior está apagado por configuración:</p>
+          <ul>
+            <li data-l="en">emails</li><li data-l="es">mails</li>
+            <li data-l="en">insurer portal</li><li data-l="es">portal de la ART</li>
+            <li data-l="en">LLM calls</li><li data-l="es">llamadas al LLM</li>
+            <li class="ok" data-l="en">everything else, like production</li><li class="ok" data-l="es">todo lo demás, igual que producción</li>
+          </ul>
         </div>
+        <div><span class="n">05</span><h3 data-l="en">Deploy & document</h3><h3 data-l="es">Deploy y documentación</h3></div>
       </div>
+      <ul class="stack" id="stack" aria-label="Stack"></ul>
+    </div>
+  </section>
+
+  <section id="trabajos">
+    <div class="wrap">
+      <p class="kicker"><b>05</b><span data-l="en">Other work</span><span data-l="es">Otros trabajos</span></p>
+      <h2 data-l="en">Java, Kotlin, C++<br><span class="o">and the web.</span></h2>
+      <h2 data-l="es">Java, Kotlin, C++<br><span class="o">y la web.</span></h2>
+      <p class="intro" data-l="en">University team projects and sites for clients. Hover a card to open it.</p>
+      <p class="intro" data-l="es">Proyectos en equipo de la facultad y sitios para clientes. Pasá el mouse por una tarjeta para abrirla.</p>
+      <div class="shop" id="shop"></div>
     </div>
   </section>
 
 </main>
 
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <p class="name">Francisco Ian Patejim</p>
+        <p data-l="en">Full-stack developer · Buenos Aires, Argentina. Analista Programador Universitario (UNLa), B.Sc. in Information Systems in progress. English: advanced.</p>
+        <p data-l="es">Desarrollador full-stack · Buenos Aires, Argentina. Analista Programador Universitario (UNLa), Licenciatura en Sistemas en curso. Inglés avanzado.</p>
+      </div>
+      <div>
+        <h4 data-l="en">contact</h4><h4 data-l="es">contacto</h4>
+        <ul>
+          <li><a class="mail" href="mailto:jimpate0@gmail.com">jimpate0@gmail.com</a></li>
+          <li><a href="https://www.linkedin.com/in/francisco-ian-patejim">LinkedIn ↗</a></li>
+          <li><a href="https://github.com/FranPate">GitHub ↗</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>CV</h4>
+        <ul>
+          <li><a href="cv/CV-Francisco-Patejim-ES.pdf">Español (PDF)</a></li>
+          <li><a href="cv/CV-Francisco-Patejim-EN.pdf">English (PDF)</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copy"><span>© 2026 Francisco Ian Patejim</span><span data-l="en">Hand-written HTML, CSS and JS. No frameworks.</span><span data-l="es">HTML, CSS y JS a mano. Sin frameworks.</span></div>
+  </div>
+</footer>
+
 <script>
   var d = document.documentElement;
   function guardar(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function idioma() { return d.lang === 'es' ? 'es' : 'en'; }
+  function ic(id) { return '<svg class="ic" aria-hidden="true"><use href="#i-' + id + '"/></svg>'; }
+  function esc(s) { return String(s).replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
 
-  // Idioma
-  var TITULOS = { en: 'Francisco Ian Patejim — Full-stack developer', es: 'Francisco Ian Patejim — Desarrollador full-stack' };
-  document.getElementById('tg-lang').addEventListener('click', function () {
-    d.lang = idioma() === 'es' ? 'en' : 'es'; guardar('idioma', d.lang); pintar();
-  });
-
-  // Tema: alterna contra lo que se ve ahora, no contra el atributo
+  document.getElementById('tg-lang').addEventListener('click', function () { d.lang = idioma() === 'es' ? 'en' : 'es'; guardar('idioma', d.lang); pintar(); });
   document.getElementById('tg-theme').addEventListener('click', function () {
-    var oscuroAhora = getComputedStyle(d).getPropertyValue('--bg').trim() === '#0c0f12';
-    var t = oscuroAhora ? 'light' : 'dark'; d.setAttribute('data-theme', t); guardar('tema', t);
+    var oscuro = getComputedStyle(d).getPropertyValue('--bg').trim() === '#101010';
+    var t = oscuro ? 'light' : 'dark'; d.setAttribute('data-theme', t); guardar('tema', t);
   });
+
+  // Stack: cinta diagonal y lista con logos
+  var STACK = [['vuedotjs','Vue 3'],['pinia','Pinia'],['vuetify','Vuetify'],['nodedotjs','Node.js'],['express','Express'],['mysql','MySQL'],['sequelize','Sequelize'],
+    ['googlecloud','Google Cloud Platform'],['n8n','n8n'],['linux','Linux'],['nginx','nginx'],['pm2','pm2'],['vitest','Vitest'],['git','Git'],
+    ['openjdk','Java'],['springboot','Spring Boot'],['apachekafka','Kafka'],['graphql','GraphQL'],['react','React'],['typescript','TypeScript'],['astro','Astro'],['kotlin','Kotlin']];
+  var cinta = STACK.map(function (s) { return '<span>' + ic(s[0]) + s[1] + '</span>'; }).join('');
+  document.getElementById('track').innerHTML = cinta + cinta;
+  document.getElementById('stack').innerHTML = STACK.slice(0, 14).map(function (s) {
+    return '<li' + (s[0] === 'googlecloud' ? ' class="gcp"' : '') + '>' + ic(s[0]) + s[1] + '</li>';
+  }).join('') + '<li>LLM APIs</li><li>Server-Sent Events</li><li>docxtemplater</li><li>pdf-lib</li>';
 
   // Galería
   var CAPS = {
     en: ['Investigator dashboard: active cases, deadlines and interview status.',
-         'Case detail: claim data, the status of each interview, and the actions that move the case forward.',
+         'Interview builder, filled in with an invented case: the form becomes a structured interview that the LLM drafts.',
+         'Case detail: claim data, the status of each interview and the actions that move the case forward.',
          'Incoming cases arrive from the insurer’s email with a suggested investigator; the supervisor confirms or changes it.'],
     es: ['Dashboard del investigador: casos activos, vencimientos y estado de las entrevistas.',
+         'Armador de entrevistas, con un caso inventado: el formulario se convierte en una entrevista estructurada que redacta el LLM.',
          'Detalle del caso: datos del siniestro, estado de cada entrevista y las acciones que lo hacen avanzar.',
          'Los casos llegan del mail de la ART con un investigador sugerido; el supervisor lo confirma o lo cambia.']
   };
-  var NOTA = { en: ' All names, companies and claim numbers are fake.', es: ' Todos los nombres, empresas y números son ficticios.' };
-  var shot = 0;
-  var tabs = document.querySelectorAll('.tabs button'), imgs = document.querySelectorAll('.browser img');
-  tabs.forEach(function (b) {
-    b.addEventListener('click', function () { shot = +b.dataset.shot; pintarGaleria(); });
-  });
-  function pintarGaleria() {
+  var NOTA = { en: ' Names, companies and numbers are fake.', es: ' Nombres, empresas y números son ficticios.' };
+  var shot = 0, tabs = document.querySelectorAll('.tabs button'), imgs = document.querySelectorAll('.screen img');
+  tabs.forEach(function (b) { b.addEventListener('click', function () { shot = +b.dataset.shot; pintarGaleria(true); }); });
+  function pintarGaleria(anim) {
     tabs.forEach(function (b, i) { b.setAttribute('aria-selected', i === shot); });
-    imgs.forEach(function (im, i) { im.hidden = i !== shot; });
+    imgs.forEach(function (im, i) { im.hidden = i !== shot; im.classList.toggle('in', anim && i === shot); });
     document.getElementById('cap').textContent = CAPS[idioma()][shot] + NOTA[idioma()];
   }
 
   // Arquitectura
   var NODOS = {
-    mail:    { tag: 'input', t: { en: 'Insurer emails', es: 'Mails de las ART' },
-               p: { en: 'Insurers assign cases by email, with PDFs attached. Each insurer formats them differently, and some resend the same case under a new message.', es: 'Las ART asignan los casos por mail, con PDFs adjuntos. Cada una los arma distinto y algunas reenvían el mismo caso en otro mensaje.' },
-               k: ['Gmail', 'PDF'] },
-    poller:  { tag: 'backend · job', t: { en: 'Mail poller', es: 'Poller de mails' },
-               p: { en: 'Reads the managers’ inboxes, parses the PDFs, detects the insurer and the claim number, dedupes forwarded copies and creates the case. It never overwrites a draft someone is working on.', es: 'Lee las casillas de los jefes, parsea los PDFs, detecta la ART y el número de siniestro, descarta reenvíos duplicados y crea el caso. Nunca pisa un borrador en el que alguien está trabajando.' },
-               k: ['Gmail API', 'pdf parsing', 'dedup'] },
-    llm:     { tag: 'integration', t: { en: 'n8n + LLM', es: 'n8n + LLM' },
-               p: { en: 'Interviews are structured by an LLM through n8n workflows. The call is fire-and-forget; n8n calls back with a shared secret and the result reaches the browser by SSE. An assistant also flags missing data and contradictions between interviews.', es: 'Las entrevistas las estructura un LLM a través de workflows de n8n. La llamada no bloquea: n8n responde por callback con un secreto compartido y el resultado llega al navegador por SSE. Un asistente además marca datos faltantes y contradicciones entre entrevistas.' },
-               k: ['n8n', 'xAI', 'webhooks', 'prompting'] },
-    app:     { tag: 'frontend', t: { en: 'Vue 3 app', es: 'App en Vue 3' },
-               p: { en: 'A 9-step report builder, interview builders, a dashboard with live updates, supervisor queues, a PDF editor that runs in the browser and maps of the route. Role-based: investigator, supervisor, manager, admin.', es: 'Un generador de informes de 9 pasos, armadores de entrevistas, un dashboard que se actualiza en vivo, colas de supervisión, un editor de PDF que corre en el navegador y mapas del recorrido. Por roles: investigador, supervisor, jefe, admin.' },
-               k: ['Vue 3', 'Pinia', 'Vuetify', 'pdf-lib', 'Google Maps', 'PWA'] },
-    api:     { tag: 'backend', t: { en: 'Express API', es: 'API en Express' },
-               p: { en: 'ES-module Node backend. JWT with per-user revocation, two-factor login, Server-Sent Events for the live dashboard, optimistic concurrency (409 on stale versions) for documents edited by two people.', es: 'Backend Node con ES modules. JWT revocable por usuario, login en dos pasos, Server-Sent Events para el dashboard en vivo y concurrencia optimista (409 ante una versión vieja) en documentos que editan dos personas.' },
-               k: ['Node.js', 'Express', 'JWT', 'SSE'] },
-    db:      { tag: 'data', t: { en: 'MySQL', es: 'MySQL' },
-               p: { en: 'Cases, interviews, report versions, comments, assignments and audit tables. Schema changes are manual migrations, reviewed one by one, never auto-sync in production.', es: 'Casos, entrevistas, versiones de informes, comentarios, asignaciones y tablas de auditoría. Los cambios de esquema son migraciones manuales, revisadas una por una; nunca auto-sync en producción.' },
-               k: ['MySQL', 'Sequelize', 'migrations'] },
-    replies: { tag: 'backend · job', t: { en: 'Company replies', es: 'Respuestas' },
-               p: { en: 'Investigators email companies from their own Gmail. A second poller matches replies to cases by claim number in the subject, discards everything else without storing it, and caps reads per cycle to stay inside Gmail’s quota.', es: 'Los investigadores mandan mails a las empresas desde su propio Gmail. Un segundo poller asocia las respuestas al caso por el número de siniestro del asunto, descarta todo lo demás sin guardarlo y limita las lecturas por ciclo para no pasarse de la cuota de Gmail.' },
-               k: ['Gmail API', 'IMAP', 'OAuth'] },
-    word:    { tag: 'backend', t: { en: 'Report engine', es: 'Motor de informes' },
-               p: { en: 'The report is frozen as JSON, edited online with versions and reviewer comments, and rendered to Word from 29 templates. A test compiles every template, and a snapshot test checks the rendered text of 121 combinations.', es: 'El informe se congela como JSON, se edita online con versiones y comentarios del revisor, y se genera en Word desde 29 plantillas. Un test compila cada plantilla y otro compara el texto generado en 121 combinaciones.' },
-               k: ['docxtemplater', 'PizZip', 'LibreOffice'] },
-    out:     { tag: 'output', t: { en: 'Drive + insurer portal', es: 'Drive + portal ART' },
-               p: { en: 'Finished reports go to the case’s Drive folder with the investigator’s own token, and to the insurer’s portal through a resumable upload that picks up where it left off after a network failure.', es: 'Los informes terminados van a la carpeta de Drive del caso con el token del investigador, y al portal de la ART con un envío reanudable que retoma donde quedó si se corta la red.' },
-               k: ['Google Drive API', 'resumable upload'] }
+    mail: { tag: 'input', t: { en: 'Insurer emails', es: 'Mails de las ART' }, k: ['Gmail', 'PDF'],
+      p: { en: 'Insurers assign cases by email, with PDFs attached. Each one formats them differently, and some resend the same case in a new message.', es: 'Las ART asignan los casos por mail, con PDFs adjuntos. Cada una los arma distinto y algunas reenvían el mismo caso en otro mensaje.' } },
+    poller: { tag: 'backend · job', t: { en: 'Mail poller', es: 'Poller de mails' }, k: ['Gmail API', 'PDF parsing', 'dedup'],
+      p: { en: 'Reads the managers’ inboxes, parses the PDFs, detects the insurer and the claim number, discards duplicates and creates the case. It never overwrites a draft someone is working on.', es: 'Lee las casillas de los jefes, parsea los PDFs, detecta la ART y el número de siniestro, descarta duplicados y crea el caso. Nunca pisa un borrador en el que alguien está trabajando.' } },
+    llm: { tag: 'integration', t: { en: 'n8n + LLM', es: 'n8n + LLM' }, k: ['n8n', 'xAI', 'webhooks', 'prompting'],
+      p: { en: 'Interviews are structured by an LLM through n8n workflows. The call doesn’t block: n8n calls back with a shared secret and the result reaches the browser by SSE.', es: 'Las entrevistas las estructura un LLM a través de workflows de n8n. La llamada no bloquea: n8n responde por callback con un secreto compartido y el resultado llega al navegador por SSE.' } },
+    app: { tag: 'frontend', t: { en: 'Vue 3 app', es: 'App en Vue 3' }, k: ['Vue 3', 'Pinia', 'Vuetify', 'pdf-lib', 'Google Maps', 'PWA'],
+      p: { en: 'Report and interview builders, a live dashboard, supervisor queues, a PDF editor that runs in the browser and route maps. Four roles: investigator, supervisor, manager, admin.', es: 'Armadores de informes y entrevistas, un dashboard en vivo, colas de supervisión, un editor de PDF que corre en el navegador y mapas del recorrido. Cuatro roles: investigador, supervisor, jefe, admin.' } },
+    api: { tag: 'backend', t: { en: 'Express API', es: 'API en Express' }, k: ['Node.js', 'Express', 'JWT', 'SSE'],
+      p: { en: 'Node backend with ES modules. JWT with per-user revocation, two-factor login, Server-Sent Events for the live dashboard and optimistic concurrency (409 on a stale version) for documents two people edit.', es: 'Backend Node con ES modules. JWT revocable por usuario, login en dos pasos, Server-Sent Events para el dashboard en vivo y concurrencia optimista (409 ante una versión vieja) en documentos que editan dos personas.' } },
+    db: { tag: 'data', t: { en: 'MySQL', es: 'MySQL' }, k: ['MySQL', 'Sequelize', 'migrations'],
+      p: { en: 'Cases, interviews, report versions, comments, assignments and audit tables. Schema changes are manual migrations, never auto-sync in production.', es: 'Casos, entrevistas, versiones de informes, comentarios, asignaciones y tablas de auditoría. Los cambios de esquema son migraciones manuales; nunca auto-sync en producción.' } },
+    replies: { tag: 'backend · job', t: { en: 'Company replies', es: 'Respuestas' }, k: ['Gmail API', 'IMAP', 'OAuth'],
+      p: { en: 'Investigators email companies from their own Gmail. A second poller matches replies to cases by the claim number in the subject and discards everything else without storing it.', es: 'Los investigadores escriben a las empresas desde su Gmail. Un segundo poller asocia las respuestas al caso por el número de siniestro del asunto y descarta todo lo demás sin guardarlo.' } },
+    word: { tag: 'backend', t: { en: 'Report engine', es: 'Motor de informes' }, k: ['docxtemplater', 'PizZip', 'LibreOffice'],
+      p: { en: 'The report is frozen as JSON, edited online with versions and reviewer comments, and rendered to Word from templates. A snapshot test compares the rendered text in 121 combinations.', es: 'El informe se congela como JSON, se edita online con versiones y comentarios del revisor, y se genera en Word desde plantillas. Un test compara el texto generado en 121 combinaciones.' } },
+    out: { tag: 'output', t: { en: 'Drive + insurer portal', es: 'Drive + portal ART' }, k: ['Google Drive API', 'resumable upload'],
+      p: { en: 'Finished reports go to the case’s Drive folder with the investigator’s own token, and to the insurer’s portal through an upload that resumes where it left off.', es: 'Los informes terminados van a la carpeta de Drive del caso con el token del investigador, y al portal de la ART con un envío que retoma donde quedó.' } }
   };
-  var actual = 'api';
-  var nodos = document.querySelectorAll('.node');
-  var flows = document.getElementById('flows');
-  document.querySelectorAll('#edges path').forEach(function (p) {
-    var c = p.cloneNode(); c.setAttribute('class', 'edge flow'); flows.appendChild(c);
-  });
-  nodos.forEach(function (n) {
-    var ir = function () { actual = n.dataset.n; pintarNodo(); };
-    n.addEventListener('mouseenter', ir); n.addEventListener('focus', ir); n.addEventListener('click', ir);
-  });
+  var actual = 'api', nodos = document.querySelectorAll('.node'), flows = document.getElementById('flows');
+  document.querySelectorAll('#edges path').forEach(function (p) { var c = p.cloneNode(); c.setAttribute('class', 'edge flow'); flows.appendChild(c); });
+  nodos.forEach(function (n) { var ir = function () { actual = n.dataset.n; pintarNodo(); }; n.addEventListener('mouseenter', ir); n.addEventListener('focus', ir); n.addEventListener('click', ir); });
   function pintarNodo() {
     var x = NODOS[actual], l = idioma();
-    nodos.forEach(function (n) {
-      n.classList.toggle('on', n.dataset.n === actual);
-      n.querySelector('text').textContent = NODOS[n.dataset.n].t[l];
-    });
-    flows.querySelectorAll('path').forEach(function (p) {
-      p.classList.toggle('on', p.dataset.e.split(' ').indexOf(actual) !== -1);
-    });
+    nodos.forEach(function (n) { n.classList.toggle('on', n.dataset.n === actual); n.querySelector('text').textContent = NODOS[n.dataset.n].t[l]; });
+    flows.querySelectorAll('path').forEach(function (p) { p.classList.toggle('on', p.dataset.e.split(' ').indexOf(actual) !== -1); });
     document.getElementById('d-tag').textContent = x.tag;
     document.getElementById('d-title').textContent = x.t[l];
     document.getElementById('d-text').textContent = x.p[l];
     document.getElementById('d-tech').innerHTML = x.k.map(function (k) { return '<li>' + k + '</li>'; }).join('');
   }
 
-  function pintar() { document.title = TITULOS[idioma()]; pintarGaleria(); pintarNodo(); }
-  pintar();
+  // Tienda de proyectos
+  var CODIGO = '<span class="c">// repeat-until: la variante que nos tocó</span>\n<span class="k">int</span> n = 1;\n<span class="k">repeat</span> {\n    print(n);\n    n = n + 1;\n} <span class="k">until</span> (n > 5);';
+  var PROYECTOS = [
+    { big: true, img: 'img/proj-museo.jpg', t: 'Museo Virtual', sku: 'UNLa · 2026',
+      what: { en: 'Distributed systems course. A museum platform split into services.', es: 'Sistemas Distribuidos. Una plataforma de museo partida en servicios.' },
+      more: { en: 'Catalog and reports over GraphQL, events and sign-ups over REST with JWT and roles, a gRPC layer behind an API gateway, and Kafka for notifications and audit. Team of four; I made the most commits (31 of 64).', es: 'Catálogo y reportes por GraphQL, eventos e inscripciones por REST con JWT y roles, una capa gRPC detrás de un API gateway y Kafka para notificaciones y auditoría. Equipo de cuatro; soy el que más commits hizo (31 de 64).' },
+      tech: [['openjdk','Java 21'],['springboot','Spring Boot'],['graphql','GraphQL'],['','gRPC'],['apachekafka','Kafka'],['react','React'],['mariadb','MariaDB']],
+      link: 'https://github.com/aizarassefh/sist-dist-tp-grupo-a' },
+    { img: 'img/proj-hdb.jpg', t: 'Estudio HDB', sku: 'web · 2026', live: true,
+      what: { en: 'The firm’s public site.', es: 'El sitio público del estudio.' },
+      more: { en: 'A static site built with Astro: what the firm does, how it works and how to contact it.', es: 'Un sitio estático hecho con Astro: qué hace el estudio, cómo trabaja y cómo contactarlo.' },
+      tech: [['astro','Astro'],['typescript','TypeScript']], link: 'https://estudiohdb.com/previa' },
+    { img: 'img/proj-bd.jpg', t: 'Black Diamond Detailing', sku: 'web · 2026',
+      what: { en: 'Landing page for a mobile car-detailing business in Rosario.', es: 'Landing de un servicio de detailing de autos a domicilio en Rosario.' },
+      more: { en: 'One goal: that the visitor writes on WhatsApp. Services, plans and FAQ in a single page.', es: 'Un solo objetivo: que el visitante escriba por WhatsApp. Servicios, planes y preguntas en una sola página.' },
+      tech: [['astro','Astro']] },
+    { code: CODIGO, t: 'MiniLang', sku: 'UNLa · 2026',
+      what: { en: 'An interpreter for a small statically typed language.', es: 'Un intérprete para un lenguaje chico de tipado estático.' },
+      more: { en: 'Grammar in ANTLR4, semantic analysis with a symbol table, and an interpreter in Java. Team of two.', es: 'Gramática en ANTLR4, análisis semántico con tabla de símbolos e intérprete en Java. Equipo de dos.' },
+      tech: [['openjdk','Java'],['','ANTLR4']], link: 'https://github.com/Gwainne/tp-interprete' },
+    { ph: ['springboot', 'Steam'], t: 'SteamUNLA', sku: 'UNLa · 2026',
+      what: { en: 'A game store inspired by Steam.', es: 'Una tienda de videojuegos inspirada en Steam.' },
+      more: { en: 'Catalog with filters, purchases, library, reviews, wishlist and a publishing panel for developers. Team of five.', es: 'Catálogo con filtros, compras, biblioteca, reseñas, wishlist y panel de publicación para desarrolladores. Equipo de cinco.' },
+      tech: [['openjdk','Java'],['springboot','Spring Boot']], link: 'https://github.com/Gwainne/steamunla' },
+    { ph: ['springboot', 'OO2'], t: 'Orientación a Objetos 2', sku: 'UNLa · 2025',
+      what: { en: 'Team web app with Spring Boot and a relational database.', es: 'App web en equipo con Spring Boot y base relacional.' },
+      more: { en: 'Object-oriented design applied to a full Spring Boot application, with configuration by environment variables.', es: 'Diseño orientado a objetos aplicado a una aplicación Spring Boot completa, configurada por variables de entorno.' },
+      tech: [['openjdk','Java'],['springboot','Spring Boot'],['mysql','MySQL']], link: 'https://github.com/lapizgoma/OO2' },
+    { ph: ['android', 'Android'], t: 'Pokédex Android', sku: 'UNLa · 2025',
+      what: { en: 'Android app for the Languages Seminar.', es: 'App Android para el Seminario de Lenguajes.' },
+      more: { en: 'My parts: user sign-up, the menu and top bar, and “remember me” with SharedPreferences.', es: 'Lo mío: registro de usuarios, el menú y la barra superior, y el “recordar usuario” con SharedPreferences.' },
+      tech: [['kotlin','Kotlin'],['android','Android']], link: 'https://github.com/lapizgoma/semi' },
+    { ph: ['cplusplus', 'C++'], t: 'Programación Concurrente', sku: 'UNLa · 2026',
+      what: { en: 'Team assignment in C++.', es: 'Trabajo en equipo en C++.' },
+      more: { en: 'Coursework for Concurrent Programming. Private repo.', es: 'Trabajo de la materia Programación Concurrente. Repo privado.' },
+      tech: [['cplusplus','C++']] },
+    { ph: ['dotnet', 'C#'], t: 'Simulador ferroviario 2D', sku: 'UNLa · 2024',
+      what: { en: 'A 2D train simulator organized with MVVM.', es: 'Un simulador de trenes 2D organizado con MVVM.' },
+      more: { en: 'Team project with a develop/main branch workflow.', es: 'Proyecto en equipo con flujo de ramas develop/main.' },
+      tech: [['dotnet','C#'],['','MVVM']] },
+    { ph: ['typescript', 'API'], t: 'E-commerce API', sku: 'personal',
+      what: { en: 'REST API for an online store.', es: 'API REST para una tienda online.' },
+      more: { en: 'Products, cart and JWT auth with Express and TypeScript, documented with Swagger and tested with Jest and Supertest. No live demo for now.', es: 'Productos, carrito y login con JWT en Express y TypeScript, documentada con Swagger y testeada con Jest y Supertest. Por ahora sin demo en vivo.' },
+      tech: [['typescript','TypeScript'],['express','Express'],['','Jest']], link: 'https://github.com/FranPate/my-wonderfull-store' }
+  ];
+  function pintarTienda() {
+    var l = idioma();
+    document.getElementById('shop').innerHTML = PROYECTOS.map(function (p, i) {
+      var stage = p.img ? '<img src="' + p.img + '" alt="' + esc(p.t) + '" loading="lazy" width="1200" height="750">'
+        : p.code ? '<pre class="code">' + p.code + '</pre>'
+        : '<div class="ph">' + (p.ph[0] ? ic(p.ph[0]) : '') + '<span>' + esc(p.ph[1]) + '</span></div>';
+      return '<article class="item' + (p.big ? ' big' : '') + '" tabindex="0">' +
+        '<span class="sku">' + String(i + 1).padStart(2, '0') + ' · ' + esc(p.sku) + '</span>' +
+        (p.live ? '<span class="sku live">' + (l === 'es' ? 'online' : 'live') + '</span>' : '') +
+        '<div class="stage">' + stage + '</div>' +
+        '<div class="body"><h3>' + esc(p.t) + '</h3><p class="what">' + esc(p.what[l]) + '</p>' +
+        '<div class="chips">' + p.tech.map(function (t) { return '<span>' + (t[0] ? ic(t[0]) : '') + esc(t[1]) + '</span>'; }).join('') + '</div>' +
+        '<div class="more"><div><p>' + esc(p.more[l]) + '</p>' +
+        (p.link ? '<a href="' + p.link + '" target="_blank" rel="noopener">' + (p.link.indexOf('github') !== -1 ? (l === 'es' ? 'ver código ↗' : 'view code ↗') : (l === 'es' ? 'ver sitio ↗' : 'visit site ↗')) + '</a>' : '') +
+        '</div></div></div></article>';
+    }).join('');
+  }
+  // En pantallas táctiles no hay hover: un toque abre la tarjeta
+  document.getElementById('shop').addEventListener('click', function (e) {
+    var it = e.target.closest('.item'); if (!it || e.target.closest('a')) return;
+    document.querySelectorAll('.item.open').forEach(function (o) { if (o !== it) o.classList.remove('open'); });
+    it.classList.toggle('open');
+  });
 
-  // Aparición suave de las decisiones; sin IntersectionObserver se muestran directo
-  var rv = document.querySelectorAll('.reveal');
-  if ('IntersectionObserver' in window) {
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -10% 0px' });
-    rv.forEach(function (el) { io.observe(el); });
-  } else { rv.forEach(function (el) { el.classList.add('in'); }); }
+  function pintar() { document.title = idioma() === 'es' ? 'Francisco Ian Patejim — Desarrollador full-stack' : 'Francisco Ian Patejim — Full-stack developer'; pintarGaleria(false); pintarNodo(); pintarTienda(); }
+  pintar();
 </script>
 </body>
 </html>
